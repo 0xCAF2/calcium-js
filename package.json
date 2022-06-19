@@ -1,0 +1,29 @@
+{
+  "name": "calcium-js",
+  "version": "0.1.0",
+  "description": "Calcium language interpreter on JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xCAF2/calcium-js.git"
+  },
+  "keywords": [
+    "calcium",
+    "intepreter"
+  ],
+  "author": "0xCAF2",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/0xCAF2/calcium-js/issues"
+  },
+  "homepage": "https://github.com/0xCAF2/calcium-js#readme",
+  "dependencies": {
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "jest": "^28.1.1"
+  }
+}
