@@ -2,7 +2,7 @@ import Parser from './parser'
 import Statement from './statement'
 import Status from './status'
 
-export default class Runtime {
+export class Runtime {
   /**
    * used for the step execution of each line.
    */
@@ -22,7 +22,9 @@ export default class Runtime {
    *
    * @param code a JSON string or an array
    */
-  constructor(code: string | Statement[]) {}
+  constructor(code: string | Statement[]) {
+    this.parser = new Parser()
+  }
 
   /**
    * pauses this runtime.
@@ -45,3 +47,5 @@ export default class Runtime {
     return Status.Terminated
   }
 }
+
+export { Status }
