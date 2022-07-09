@@ -2,7 +2,7 @@ import Parser from './parser'
 import Statement from './statement'
 import Status from './status'
 
-export class Runtime {
+export default class Runtime {
   /**
    * used for the step execution of each line.
    */
@@ -34,7 +34,7 @@ export class Runtime {
   }
 
   /**
-   * resume this runtime.
+   * resumes this runtime.
    */
   resume() {
     this.isPaused = false
@@ -47,5 +47,3 @@ export class Runtime {
     return Status.Terminated
   }
 }
-
-export { Status }
