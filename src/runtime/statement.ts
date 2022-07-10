@@ -1,5 +1,5 @@
 import * as Element from './element'
-import * as Kw from './keyword'
+import * as Kw from '../keywords'
 
 /**
  * a JSON array that represents one line

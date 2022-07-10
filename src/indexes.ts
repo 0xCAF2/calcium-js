@@ -1,3 +1,7 @@
+/**
+ * import * as Index from 'path_to_indexes.ts'
+ */
+
 export enum Statement {
   Indent = 0,
   Options = 1,

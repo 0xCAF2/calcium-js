@@ -1,4 +1,4 @@
-import { Any } from './types'
+import Variable from './variable'
 
 /**
  * saves variables, functions, and so on in a specific scope
@@ -7,7 +7,7 @@ export default class Namespace {
   /**
    * saves by key value pairs
    */
-  private dict = new Map<string, Any>()
+  private dict = new Map<string, Variable>()
 
   /**
    *
@@ -20,7 +20,7 @@ export default class Namespace {
    * @param key attribute's name
    * @returns
    */
-  get(key: string): Any | undefined {
+  get(key: string): Variable | undefined {
     return this.dict.get(key)
   }
 
@@ -28,7 +28,7 @@ export default class Namespace {
    * searches identifier and return its value
    * @param key identifier
    */
-  lookUp(key: string): Any | undefined {
+  lookUp(key: string): Variable | undefined {
     const value = this.dict.get(key)
     if (value !== undefined) {
       return value
@@ -42,7 +42,7 @@ export default class Namespace {
    * @param key identifier
    * @param value right hand side of assignment
    */
-  register(key: string, value: Any) {
+  register(key: string, value: Variable) {
     this.dict.set(key, value)
   }
 
