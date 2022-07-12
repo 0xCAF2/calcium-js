@@ -16,7 +16,7 @@ export default class Call {
   evaluate(env: Environment): AnyType {
     const func = env.evaluate(this.funcRef)
     if (typeof func === 'function') {
-      return func(...this.args)
+      return func(...this.args.map((a) => env.evaluate(a)))
     } else {
       throw new NotCallable()
     }

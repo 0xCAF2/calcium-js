@@ -1,4 +1,5 @@
 import Variable from './variable'
+import Constant from './constant'
 
 /**
  * saves variables, functions, and so on in a specific scope
@@ -29,11 +30,20 @@ export default class Namespace {
    * @param key identifier
    */
   lookUp(key: string): Variable | undefined {
-    const value = this.dict.get(key)
+    let value = this.dict.get(key)
     if (value !== undefined) {
       return value
     } else {
-      return this.parent?.lookUp(key)
+      value = this.parent?.lookUp(key)
+      if (value === undefined) {
+        if (key === 'document') {
+          return undefined
+        } else {
+          return new Constant(key, window[key as any])
+        }
+      } else {
+        return value
+      }
     }
   }
 

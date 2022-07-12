@@ -1,4 +1,5 @@
 import * as Calcium from '../src'
+import 'jest-environment-jsdom'
 
 describe('hello.ts', () => {
   it('create and execute the runtime', () => {
