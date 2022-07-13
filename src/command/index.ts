@@ -4,7 +4,10 @@ export interface Command {
   execute(env: Environment): void
 }
 
-export { Const } from './const'
-export { End } from './end'
-export { ExprStmt } from './exprStmt'
-export { Let } from './let'
+export { default as Const } from './const'
+export { default as Else } from './else'
+export { default as End } from './end'
+export { default as ExprStmt } from './exprStmt'
+export { default as If } from './if'
+export { default as Ifs } from './ifs'
+export { default as Let } from './let'

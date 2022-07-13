@@ -4,7 +4,7 @@ import { Environment } from '../runtime/environment'
 /**
  * terminate a program
  */
-export class End implements Command {
+export default class End implements Command {
   /**
    * do nothing
    * @param env

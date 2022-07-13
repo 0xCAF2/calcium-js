@@ -16,12 +16,22 @@ export default class Parser {
       const value = stmt[Idx.Assign.Rhs] as AnyType
       return new Cmd.Const(name, value)
     })
+    this.table.set(Kw.Command.Else, (stmt) => {
+      return new Cmd.Else()
+    })
+    this.table.set(Kw.Command.End, (stmt) => {
+      return new Cmd.End()
+    })
     this.table.set(Kw.Command.ExprStmt, (stmt) => {
       const expr = this.readExpr(stmt[Idx.ExprStmt.Expr])
       return new Cmd.ExprStmt(expr)
     })
-    this.table.set(Kw.Command.End, (stmt) => {
-      return new Cmd.End()
+    this.table.set(Kw.Command.If, (stmt) => {
+      const condition = this.readExpr(stmt[Idx.Conditional.Expr])
+      return new Cmd.If(condition)
+    })
+    this.table.set(Kw.Command.Ifs, (stmt) => {
+      return new Cmd.Ifs()
     })
   }
 

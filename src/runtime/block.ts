@@ -20,7 +20,7 @@ export enum Kind {
   Call = 'Call',
   ClassDef = 'ClassDef',
   For = 'For',
-  IfElseElse = 'IfElseElse',
+  IfElseIfElse = 'IfElseElse',
   Ifs = 'Ifs',
   While = 'While',
 }

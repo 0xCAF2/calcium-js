@@ -1,7 +1,7 @@
 import * as Calcium from '../src'
 import 'jest-environment-jsdom'
 
-describe('hello.ts', () => {
+describe('hello.spec.ts', () => {
   it('create and execute the runtime', () => {
     const runtime = new Calcium.Runtime([
       [1, [], Calcium.Keyword.Command.Const, 'message', 'Hello, World.'],
