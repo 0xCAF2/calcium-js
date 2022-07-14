@@ -26,6 +26,11 @@ export default class Parser {
       const expr = this.readExpr(stmt[Idx.ExprStmt.Expr])
       return new Cmd.ExprStmt(expr)
     })
+    this.table.set(Kw.Command.ForOf, (stmt) => {
+      const variableName = stmt[Idx.ForOf.VariableName] as string
+      const iterable = this.readExpr(stmt[Idx.ForOf.Iterable])
+      return new Cmd.ForOf(variableName, iterable)
+    })
     this.table.set(Kw.Command.If, (stmt) => {
       const condition = this.readExpr(stmt[Idx.Conditional.Expr])
       return new Cmd.If(condition)
