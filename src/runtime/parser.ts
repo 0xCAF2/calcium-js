@@ -11,6 +11,12 @@ export default class Parser {
   readonly table = new Map<Kw.Command, (stmt: Statement) => Cmd.Command>()
 
   constructor() {
+    this.table.set(Kw.Command.Break, (stmt) => {
+      return new Cmd.Break()
+    })
+    this.table.set(Kw.Command.Continue, (stmt) => {
+      return new Cmd.Continue()
+    })
     this.table.set(Kw.Command.Const, (stmt) => {
       const name = stmt[Idx.Assign.Lhs] as string
       const value = stmt[Idx.Assign.Rhs] as AnyType
@@ -48,19 +54,27 @@ export default class Parser {
     return args
   }
 
+  readBinOp(operator: string, expr: Elem.Any[]): Expr.BinaryOperator {
+    const left = this.readExpr(expr[Idx.BinaryOperator.Left])
+    const right = this.readExpr(expr[Idx.BinaryOperator.Right])
+    return new Expr.BinaryOperator(operator, left, right)
+  }
+
   readExpr(elem: Elem.Any): Expr.Expression {
     if (Array.isArray(elem)) {
       if (Array.isArray(elem[0])) {
         // an array literal
         return elem[0] as AnyType[]
       } else {
-        const kw = elem[Idx.Expression.Keyword]
+        const kw = elem[Idx.Expression.Keyword] as string
         if (kw === Kw.Reference.Variable || kw === Kw.Reference.Property) {
           return this.readRef(elem as Elem.Reference)
         } else if (kw === Kw.Reference.Call) {
           const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
           const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
           return new Expr.Call(ref, args)
+        } else if (elem.length === 3) {
+          return this.readBinOp(kw, elem)
         }
       }
     } else {

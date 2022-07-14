@@ -4,7 +4,9 @@ export interface Command {
   execute(env: Environment): void
 }
 
+export { default as Break } from './break'
 export { default as Const } from './const'
+export { default as Continue } from './continue'
 export { default as Else } from './else'
 export { default as End } from './end'
 export { default as ExprStmt } from './exprStmt'

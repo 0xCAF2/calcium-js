@@ -2,7 +2,7 @@ import * as Calcium from '../src'
 import 'jest-environment-jsdom'
 
 describe('forOf.spec.ts', () => {
-  it('if statement', () => {
+  it('for of loop', () => {
     const runtime = new Calcium.Runtime([
       [1, [], Calcium.Keyword.Command.ForOf, 'ch', 'message'],
       [

@@ -1,25 +1,25 @@
 /**
- * a primitive type in JSON.
+ * a primitive type in JSON
  */
 export type Primitive = number | string | boolean | null | undefined
 
 /**
- * an array type in JSON.
+ * an array type in JSON
  */
 export type ArrayLiteral = [Any[]]
 
 /**
- * an object type in JSON.
+ * an object type in JSON
  */
 export type ObjectLiteral = {}
 
 /**
- * a reference expression.
+ * a reference expression
  */
 export type Reference = Call | Property | Subscript | Variable
 
 /**
- * a binary operator.
+ * a binary operator
  */
 export type BinaryOperator = [
   (
@@ -48,12 +48,12 @@ export type BinaryOperator = [
 ]
 
 /**
- * a unary operator.
+ * a unary operator
  */
 export type UnaryOperator = ['~' | '-_' | '!', Any]
 
 /**
- * a function call.
+ * a function call
  */
 export type Call = ['call', Reference, Any[]]
 
@@ -68,12 +68,12 @@ export type IndexOrKey = number | string | Variable | Property
 export type Property = ['prop', Reference, string]
 
 /**
- * subscript access with ['key'] syntax.
+ * subscript access with ['key'] syntax
  */
 export type Subscript = ['sub', Reference, IndexOrKey]
 
 /**
- * uses a variable (or a constant).
+ * uses a variable (or a constant)
  */
 export type Variable = ['var', string]
 

@@ -25,7 +25,11 @@ export class Environment {
   evaluate(value: Expr.Expression): AnyType {
     if (value instanceof Expr.Variable) {
       return this.context.lookUp(value.name)?.ref
-    } else if (value instanceof Expr.Property || value instanceof Expr.Call) {
+    } else if (
+      value instanceof Expr.Property ||
+      value instanceof Expr.Call ||
+      value instanceof Expr.BinaryOperator
+    ) {
       return value.evaluate(this)
     } else {
       return value
