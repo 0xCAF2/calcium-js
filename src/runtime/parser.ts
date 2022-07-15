@@ -11,6 +11,11 @@ export default class Parser {
   readonly table = new Map<Kw.Command, (stmt: Statement) => Cmd.Command>()
 
   constructor() {
+    this.table.set(Kw.Command.Assign, (stmt) => {
+      const lhs = this.readRef(stmt[Idx.Assign.Lhs] as Elem.Reference)
+      const rhs = this.readExpr(stmt[Idx.Assign.Rhs])
+      return new Cmd.Assign(lhs, rhs)
+    })
     this.table.set(Kw.Command.Break, (stmt) => {
       return new Cmd.Break()
     })
@@ -48,6 +53,15 @@ export default class Parser {
     this.table.set(Kw.Command.Ifs, (stmt) => {
       return new Cmd.Ifs()
     })
+    this.table.set(Kw.Command.Let, (stmt) => {
+      const name = stmt[Idx.Assign.Lhs] as string
+      const value = stmt[Idx.Assign.Rhs] as AnyType | undefined
+      return new Cmd.Let(name, value)
+    })
+    this.table.set(Kw.Command.While, (stmt) => {
+      const condition = this.readExpr(stmt[Idx.Conditional.Expr])
+      return new Cmd.While(condition)
+    })
   }
 
   readArgs(elems: Elem.Any[]): Expr.Expression[] {
@@ -80,7 +94,7 @@ export default class Parser {
         } else if (elem.length === 3) {
           return this.readBinOp(kw, elem)
         } else if (elem.length === 2) {
-          return this.readUnary(kw, elem)
+          return this.readUnOp(kw, elem)
         }
       }
     } else {
@@ -114,7 +128,7 @@ export default class Parser {
     return cmd
   }
 
-  readUnary(operator: string, elem: Elem.Any[]): Expr.Expression {
+  readUnOp(operator: string, elem: Elem.Any[]): Expr.Expression {
     return new Expr.UnaryOperator(
       operator,
       this.readExpr(elem[Idx.UnaryOperator.Operand])

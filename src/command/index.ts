@@ -4,6 +4,7 @@ export interface Command {
   execute(env: Environment): void
 }
 
+export { default as Assign } from './assign'
 export { default as Break } from './break'
 export { default as Const } from './const'
 export { default as Continue } from './continue'
@@ -15,3 +16,4 @@ export { default as ForOf } from './forOf'
 export { default as If } from './if'
 export { default as Ifs } from './ifs'
 export { default as Let } from './let'
+export { default as While } from './while'
