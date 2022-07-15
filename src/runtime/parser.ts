@@ -25,6 +25,10 @@ export default class Parser {
     this.table.set(Kw.Command.Else, (stmt) => {
       return new Cmd.Else()
     })
+    this.table.set(Kw.Command.ElseIf, (stmt) => {
+      const condition = this.readExpr(stmt[Idx.Conditional.Expr])
+      return new Cmd.ElseIf(condition)
+    })
     this.table.set(Kw.Command.End, (stmt) => {
       return new Cmd.End()
     })
@@ -69,12 +73,14 @@ export default class Parser {
         const kw = elem[Idx.Expression.Keyword] as string
         if (kw === Kw.Reference.Variable || kw === Kw.Reference.Property) {
           return this.readRef(elem as Elem.Reference)
-        } else if (kw === Kw.Reference.Call) {
+        } else if (kw === Kw.Expression.Call) {
           const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
           const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
           return new Expr.Call(ref, args)
         } else if (elem.length === 3) {
           return this.readBinOp(kw, elem)
+        } else if (elem.length === 2) {
+          return this.readUnary(kw, elem)
         }
       }
     } else {
@@ -106,5 +112,12 @@ export default class Parser {
       throw new Err.CommandNotDefined(kw)
     }
     return cmd
+  }
+
+  readUnary(operator: string, elem: Elem.Any[]): Expr.Expression {
+    return new Expr.UnaryOperator(
+      operator,
+      this.readExpr(elem[Idx.UnaryOperator.Operand])
+    )
   }
 }

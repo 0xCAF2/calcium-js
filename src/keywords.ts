@@ -31,6 +31,7 @@ export enum Command {
   Const = 'const',
   Continue = 'continue',
   Else = 'else',
+  ElseIf = 'else if',
   End = 'end',
   ExprStmt = 'expr',
   For = 'for',
@@ -45,7 +46,6 @@ export enum Command {
 }
 
 export enum Reference {
-  Call = 'call',
   Property = 'prop',
   Subscript = 'sub',
   Variable = 'var',
@@ -53,6 +53,17 @@ export enum Reference {
 
 export enum UnaryOperator {
   BitwiseNot = '~',
+  DecrementPrefix = '--_',
+  DecrementPostfix = '_--',
+  IncrementPrefix = '++_',
+  IncrementPostfix = '_++',
   Negative = '-_',
   Not = '!',
+}
+
+export enum Expression {
+  Arrow = '=>',
+  Call = 'call',
+  Super = 'super',
+  This = 'this',
 }

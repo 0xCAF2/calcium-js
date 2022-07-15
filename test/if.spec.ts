@@ -13,12 +13,19 @@ describe('if.spec.ts', () => {
         Calcium.Keyword.Command.ExprStmt,
         ['call', ['prop', 'console', 'log'], ['NG']],
       ],
-      [2, [], Calcium.Keyword.Command.Else],
+      [2, [], Calcium.Keyword.Command.ElseIf, ['!', ['var', 'condition']]],
       [
         3,
         [],
         Calcium.Keyword.Command.ExprStmt,
         ['call', ['prop', 'console', 'log'], ['OK']],
+      ],
+      [2, [], Calcium.Keyword.Command.Else],
+      [
+        3,
+        [],
+        Calcium.Keyword.Command.ExprStmt,
+        ['call', ['prop', 'console', 'log'], ['NG']],
       ],
       [1, [], Calcium.Keyword.Command.End],
     ])
