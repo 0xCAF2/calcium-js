@@ -19,6 +19,9 @@ export default class Parser {
     this.table.set(Kw.Command.Break, (stmt) => {
       return new Cmd.Break()
     })
+    this.table.set(Kw.Command.Comment, (stmt) => {
+      return new Cmd.Comment(stmt[Idx.Comment.Text] as string | undefined)
+    })
     this.table.set(Kw.Command.Continue, (stmt) => {
       return new Cmd.Continue()
     })
@@ -46,6 +49,11 @@ export default class Parser {
       const iterable = this.readExpr(stmt[Idx.ForOf.Iterable])
       return new Cmd.ForOf(variableName, iterable)
     })
+    this.table.set(Kw.Command.Function, (stmt) => {
+      const funcName = stmt[Idx.Function.Name] as string
+      const params = stmt[Idx.Function.Parameters] as string[]
+      return new Cmd.Function(funcName, params)
+    })
     this.table.set(Kw.Command.If, (stmt) => {
       const condition = this.readExpr(stmt[Idx.Conditional.Expr])
       return new Cmd.If(condition)
@@ -57,6 +65,10 @@ export default class Parser {
       const name = stmt[Idx.Assign.Lhs] as string
       const value = stmt[Idx.Assign.Rhs] as AnyType | undefined
       return new Cmd.Let(name, value)
+    })
+    this.table.set(Kw.Command.Return, (stmt) => {
+      const expr = this.readExpr(stmt[Idx.Return.Expr])
+      return new Cmd.Return(expr)
     })
     this.table.set(Kw.Command.While, (stmt) => {
       const condition = this.readExpr(stmt[Idx.Conditional.Expr])

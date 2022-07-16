@@ -47,7 +47,7 @@ export enum ForOf {
   Iterable = 4,
 }
 
-export enum FuncDef {
+export enum Function {
   Name = 3,
   Parameters = 4,
 }

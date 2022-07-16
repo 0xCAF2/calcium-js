@@ -54,8 +54,8 @@ export class Block {
   constructor(
     public readonly kind: Kind,
     public readonly address: Address,
-    public readonly enter: Enter,
-    public readonly exit: Exit
+    private readonly enter: Enter,
+    private readonly exit: Exit
   ) {
     this.address = address.clone()
   }

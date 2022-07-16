@@ -16,6 +16,8 @@ export class Environment {
   calls: CallingCmd[] = []
   code: Statement[]
   context = new Namespace()
+  returnedValue: AnyType
+  stack: Namespace[] = []
 
   constructor(code: Statement[]) {
     this.code = code
@@ -46,7 +48,7 @@ export class Environment {
         if (delta > 0) {
           // some blocks must be popped.
           for (let i = 0; i < delta; ++i) {
-            const result = this.lastBlock.exit(this)
+            const result = this.blocks.at(-1)!.didExit(this)
             if (result === Result.Invalid) {
               throw new Err.InconsistentBlock()
             } else if (result === Result.Jumpped) {
@@ -63,9 +65,5 @@ export class Environment {
       }
     }
     this.address.line = nextIndex
-  }
-
-  get lastBlock(): Block {
-    return this.blocks[this.blocks.length - 1]
   }
 }

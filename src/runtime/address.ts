@@ -6,19 +6,19 @@ export default class Address {
    *
    * @param indent corresponds to the indent of a block
    * @param line line number (index in the code array)
-   * @param call the counter of function calls
+   * @param calls the counter of function calls
    */
   constructor(
     public indent: number,
     public line: number,
-    public call: number = 0
+    public calls: number = 0
   ) {}
 
   /**
    * Make a copy
    */
   clone() {
-    return new Address(this.indent, this.line, this.call)
+    return new Address(this.indent, this.line, this.calls)
   }
 
   /**
@@ -30,7 +30,7 @@ export default class Address {
     return (
       this.indent === address.indent &&
       this.line === address.line &&
-      this.call === address.call
+      this.calls === address.calls
     )
   }
 
