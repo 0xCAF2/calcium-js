@@ -164,6 +164,10 @@ function visit(stmt: ts.Node) {
     ++indent
     visit(stmt.statement)
     --indent
+  } else if (ts.isContinueStatement(stmt)) {
+    code.push([indent, [], Calcium.Keyword.Command.Continue])
+  } else if (ts.isBreakStatement(stmt)) {
+    code.push([indent, [], Calcium.Keyword.Command.Break])
   } else if (ts.isBlock(stmt)) {
     for (const s of stmt.statements) {
       visit(s)
