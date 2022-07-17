@@ -42,6 +42,8 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
       case ts.SyntaxKind.ExclamationToken:
         return [Calcium.Keyword.UnaryOperator.Not, parseExpr(n.operand)]
     }
+  } else if (ts.isArrayLiteralExpression(n)) {
+    return [n.elements.map((e) => parseExpr(e))]
   } else if (ts.isExpressionStatement(n)) {
     const expr = n.expression
     if (ts.isCallExpression(expr)) {
@@ -137,6 +139,21 @@ function visit(stmt: ts.Node) {
       }
       visitElseIf(stmt.elseStatement)
     }
+    --indent
+  } else if (ts.isForOfStatement(stmt)) {
+    const variableName = (
+      stmt.initializer as ts.VariableDeclarationList
+    ).declarations[0].name.getText()
+    const iterable = parseExpr(stmt.expression)
+    code.push([
+      indent,
+      [],
+      Calcium.Keyword.Command.ForOf,
+      variableName,
+      iterable,
+    ])
+    ++indent
+    visit(stmt.statement)
     --indent
   } else if (ts.isBlock(stmt)) {
     for (const s of stmt.statements) {

@@ -4,14 +4,11 @@ import 'jest-environment-jsdom'
 describe('forOf.spec.ts', () => {
   it('for of loop', () => {
     const runtime = new Calcium.Runtime([
-      [1, [], Calcium.Keyword.Command.ForOf, 'ch', 'message'],
-      [
-        2,
-        [],
-        Calcium.Keyword.Command.ExprStmt,
-        ['call', ['prop', 'console', 'log'], [['var', 'ch']]],
-      ],
-      [1, [], Calcium.Keyword.Command.End],
+      [1, [], 'let', 's', 0],
+      [1, [], 'for of', 'n', [[0, 1, 2]]],
+      [2, [], '=', ['var', 's'], ['+', ['var', 's'], ['var', 'n']]],
+      [1, [], 'expr', ['call', ['prop', 'console', 'log'], [['var', 's']]]],
+      [1, [], 'end'],
     ])
     expect(runtime.run()).toBe(Calcium.Status.Terminated)
   })
