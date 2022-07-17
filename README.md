@@ -2,6 +2,13 @@
 
 Calcium language interpreter on JavaScript
 
+## Convert JavaScript code to Calcium
+
+```bash
+tsc script/convert.ts
+node script/convert.js script/tests/hello.js # output Calcium code
+```
+
 ## Import and create the Runtime
 
 ```typescript
