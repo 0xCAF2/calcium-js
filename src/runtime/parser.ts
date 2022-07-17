@@ -27,7 +27,7 @@ export default class Parser {
     })
     this.table.set(Kw.Command.Const, (stmt) => {
       const name = stmt[Idx.Assign.Lhs] as string
-      const value = stmt[Idx.Assign.Rhs] as AnyType
+      const value = this.readExpr(stmt[Idx.Assign.Rhs])
       return new Cmd.Const(name, value)
     })
     this.table.set(Kw.Command.Else, (stmt) => {
@@ -63,12 +63,20 @@ export default class Parser {
     })
     this.table.set(Kw.Command.Let, (stmt) => {
       const name = stmt[Idx.Assign.Lhs] as string
-      const value = stmt[Idx.Assign.Rhs] as AnyType | undefined
-      return new Cmd.Let(name, value)
+      if (stmt.length <= Idx.Assign.Rhs) {
+        return new Cmd.Let(name)
+      } else {
+        const value = this.readExpr(stmt[Idx.Assign.Rhs])
+        return new Cmd.Let(name, value)
+      }
     })
     this.table.set(Kw.Command.Return, (stmt) => {
-      const expr = this.readExpr(stmt[Idx.Return.Expr])
-      return new Cmd.Return(expr)
+      if (stmt.length <= Idx.Return.Expr) {
+        return new Cmd.Return()
+      } else {
+        const expr = this.readExpr(stmt[Idx.Return.Expr])
+        return new Cmd.Return(expr)
+      }
     })
     this.table.set(Kw.Command.While, (stmt) => {
       const condition = this.readExpr(stmt[Idx.Conditional.Expr])

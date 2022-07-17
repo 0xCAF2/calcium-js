@@ -41,6 +41,18 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
     switch (n.operator) {
       case ts.SyntaxKind.ExclamationToken:
         return [Calcium.Keyword.UnaryOperator.Not, parseExpr(n.operand)]
+      case ts.SyntaxKind.MinusToken:
+        return [Calcium.Keyword.UnaryOperator.Negative, parseExpr(n.operand)]
+      case ts.SyntaxKind.MinusMinusToken:
+        return [
+          Calcium.Keyword.UnaryOperator.DecrementPrefix,
+          parseExpr(n.operand),
+        ]
+      case ts.SyntaxKind.PlusPlusToken:
+        return [
+          Calcium.Keyword.UnaryOperator.IncrementPrefix,
+          parseExpr(n.operand),
+        ]
     }
   } else if (ts.isArrayLiteralExpression(n)) {
     return [n.elements.map((e) => parseExpr(e))]
@@ -54,6 +66,10 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
   } else if (ts.isParenthesizedExpression(n)) {
     const expr = parseExpr(n.expression)
     return expr
+  } else if (ts.isCallExpression(n)) {
+    const ref = parseExpr(n.expression)
+    let args = n.arguments.map((a) => parseExpr(a))
+    return [Calcium.Keyword.Expression.Call, ref, args]
   }
   console.error(n)
   throw new Error('Not implemented')
@@ -168,6 +184,20 @@ function visit(stmt: ts.Node) {
     code.push([indent, [], Calcium.Keyword.Command.Continue])
   } else if (ts.isBreakStatement(stmt)) {
     code.push([indent, [], Calcium.Keyword.Command.Break])
+  } else if (ts.isFunctionDeclaration(stmt)) {
+    const name = stmt.name!.text
+    const params = stmt.parameters.map((p) => p.name.getText())
+    code.push([indent, [], Calcium.Keyword.Command.Function, name, params])
+    ++indent
+    visit(stmt.body!)
+    --indent
+  } else if (ts.isReturnStatement(stmt)) {
+    if (stmt.expression === undefined) {
+      code.push([indent, [], Calcium.Keyword.Command.Return])
+    } else {
+      const expr = parseExpr(stmt.expression)
+      code.push([indent, [], Calcium.Keyword.Command.Return, expr])
+    }
   } else if (ts.isBlock(stmt)) {
     for (const s of stmt.statements) {
       visit(s)

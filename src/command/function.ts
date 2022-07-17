@@ -80,7 +80,7 @@ export default class Function implements Command {
         return returnValue
       }
     }
-    Reflect.set(_f, Sym.callByUser, function () {
+    Reflect.set(_f, Sym.calledByUser, function () {
       isCalledByUser = true
       return (...args: AnyType[]) => _f(...args)
     })

@@ -1,1 +1,1 @@
-export const callByUser = Symbol('callByUser')
+export const calledByUser = Symbol('callByUser')

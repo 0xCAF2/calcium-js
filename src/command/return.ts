@@ -4,7 +4,16 @@ import { Kind } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 
 export default class Return implements Command {
-  constructor(public readonly expr?: Expression) {}
+  public readonly hasExplicitValue: boolean
+  public readonly expr?: Expression
+  constructor(...args: Expression[]) {
+    if (args.length === 0) {
+      this.hasExplicitValue = false
+    } else {
+      this.hasExplicitValue = true
+      this.expr = args[0]
+    }
+  }
 
   execute(env: Environment): void {
     env.returnedValue = env.evaluate(this.expr)
