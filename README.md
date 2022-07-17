@@ -2,6 +2,17 @@
 
 Calcium language interpreter on JavaScript
 
+## Compile Calcium and generate dist folder
+
+- Edit tsconfig.json
+
+```json
+    "module": "CommonJS",
+```
+
+- Run `tsc`
+- Restore tsconfig.json
+
 ## Convert JavaScript code to Calcium
 
 ```bash
