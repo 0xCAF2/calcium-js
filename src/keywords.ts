@@ -51,10 +51,6 @@ export enum Reference {
 
 export enum UnaryOperator {
   BitwiseNot = '~',
-  DecrementPrefix = '--_',
-  DecrementPostfix = '_--',
-  IncrementPrefix = '++_',
-  IncrementPostfix = '_++',
   Negative = '-_',
   Not = '!',
 }

@@ -19,6 +19,12 @@ export default class UnaryOperator {
         } else {
           throw new Error('- not supported')
         }
+      case Kw.UnaryOperator.BitwiseNot:
+        if (typeof value === 'number' || typeof value === 'bigint') {
+          return ~value
+        } else {
+          throw new Error('- not supported')
+        }
       default:
         throw new Error(`${this.operator} not implemented`)
     }
