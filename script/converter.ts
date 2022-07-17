@@ -72,21 +72,6 @@ function visit(stmt: ts.Node) {
       keyword = Calcium.Keyword.Command.Let
     }
     code.push([indent, [], keyword, name, rhs!])
-  } else if (ts.isIfStatement(stmt)) {
-    const condition = parseExpr(stmt.expression)
-    code.push([indent, [], Calcium.Keyword.Command.Ifs])
-    ++indent
-    code.push([indent, [], Calcium.Keyword.Command.If, condition])
-    ++indent
-    visit(stmt.thenStatement)
-    --indent
-    if (stmt.elseStatement) {
-      code.push([indent, [], Calcium.Keyword.Command.Else])
-      ++indent
-      visit(stmt.elseStatement)
-      --indent
-    }
-    --indent
   } else if (ts.isExpressionStatement(stmt)) {
     if (
       stmt
@@ -118,6 +103,44 @@ function visit(stmt: ts.Node) {
     } else {
       const keyword = Calcium.Keyword.Command.ExprStmt
       code.push([indent, [], keyword, parseExpr(stmt)])
+    }
+  } else if (ts.isIfStatement(stmt)) {
+    const condition = parseExpr(stmt.expression)
+    code.push([indent, [], Calcium.Keyword.Command.Ifs])
+    ++indent
+    code.push([indent, [], Calcium.Keyword.Command.If, condition])
+    ++indent
+    visit(stmt.thenStatement)
+    --indent
+    if (stmt.elseStatement !== undefined) {
+      const visitElseIf = function (n: ts.Node) {
+        if (ts.isIfStatement(n)) {
+          // output else if command
+          code.push([
+            indent,
+            [],
+            Calcium.Keyword.Command.ElseIf,
+            parseExpr(n.expression),
+          ])
+          ++indent
+          visit(n.thenStatement)
+          --indent
+          if (n.elseStatement !== undefined) {
+            visitElseIf(n.elseStatement)
+          }
+        } else {
+          code.push([indent, [], Calcium.Keyword.Command.Else])
+          ++indent
+          visit(n)
+          --indent
+        }
+      }
+      visitElseIf(stmt.elseStatement)
+    }
+    --indent
+  } else if (ts.isBlock(stmt)) {
+    for (const s of stmt.statements) {
+      visit(s)
     }
   }
 }
