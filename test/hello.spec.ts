@@ -4,14 +4,14 @@ import 'jest-environment-jsdom'
 describe('hello.spec.ts', () => {
   it('create and execute the runtime', () => {
     const runtime = new Calcium.Runtime([
-      [1, [], Calcium.Keyword.Command.Const, 'message', 'Hello, World.'],
+      [1, [], 'const', 'message', 'Hello, World.'],
       [
         1,
         [],
-        Calcium.Keyword.Command.ExprStmt,
+        'expr',
         ['call', ['prop', 'console', 'log'], [['var', 'message']]],
       ],
-      [1, [], Calcium.Keyword.Command.End],
+      [1, [], 'end'],
     ])
     expect(runtime.run()).toBe(Calcium.Status.Terminated)
   })

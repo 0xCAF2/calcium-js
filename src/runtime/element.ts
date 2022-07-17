@@ -1,7 +1,7 @@
 /**
  * a primitive type in JSON
  */
-export type Primitive = number | string | boolean | null | undefined
+export type Primitive = number | string | boolean | null
 
 /**
  * an array type in JSON

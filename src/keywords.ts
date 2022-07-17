@@ -34,7 +34,6 @@ export enum Command {
   ElseIf = 'else if',
   End = 'end',
   ExprStmt = 'expr',
-  ForIn = 'for in',
   ForOf = 'for of',
   Function = 'function',
   If = 'if',

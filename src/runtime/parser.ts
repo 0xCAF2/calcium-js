@@ -132,7 +132,7 @@ export default class Parser {
   }
 
   readStmt(stmt: Statement): Cmd.Command {
-    const kw = stmt[Idx.Statement.Keyword]
+    const kw = stmt[Idx.Statement.Keyword] as Kw.Command
     const cmd = this.table.get(kw)?.(stmt)
     if (cmd === undefined) {
       throw new Err.CommandNotDefined(kw)
