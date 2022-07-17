@@ -8,7 +8,7 @@ export default class UnaryOperator {
     public readonly operand: Expression
   ) {}
 
-  eva1uate(env: Environment): Expression {
+  evaluate(env: Environment): Expression {
     const value = env.evaluate(this.operand)
     switch (this.operator) {
       case Kw.UnaryOperator.Not:

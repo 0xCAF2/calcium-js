@@ -29,7 +29,8 @@ export class Environment {
       value instanceof Expr.Variable ||
       value instanceof Expr.Property ||
       value instanceof Expr.Call ||
-      value instanceof Expr.BinaryOperator
+      value instanceof Expr.BinaryOperator ||
+      value instanceof Expr.UnaryOperator
     ) {
       return value.evaluate(this)
     } else {

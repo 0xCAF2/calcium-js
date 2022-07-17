@@ -31,8 +31,17 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
     return parseInt(n.text)
   } else if (ts.isStringLiteral(n)) {
     return n.text
+  } else if (n.kind === ts.SyntaxKind.FalseKeyword) {
+    return false
+  } else if (n.kind === ts.SyntaxKind.TrueKeyword) {
+    return true
   } else if (ts.isBinaryExpression(n)) {
     return [n.operatorToken.getText(), parseExpr(n.left), parseExpr(n.right)]
+  } else if (ts.isPrefixUnaryExpression(n)) {
+    switch (n.operator) {
+      case ts.SyntaxKind.ExclamationToken:
+        return [Calcium.Keyword.UnaryOperator.Not, parseExpr(n.operand)]
+    }
   } else if (ts.isExpressionStatement(n)) {
     const expr = n.expression
     if (ts.isCallExpression(expr)) {
@@ -41,12 +50,13 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
       return [Calcium.Keyword.Expression.Call, ref, args]
     }
   }
-  throw new Error('not implemented')
+  console.error(n)
+  throw new Error('Not implemented')
 }
 
 let indent = 1
 const code: Calcium.Statement[] = []
-for (const stmt of sourceFile.statements) {
+function visit(stmt: ts.Node) {
   if (ts.isVariableStatement(stmt)) {
     const name = stmt.declarationList.declarations[0].name.getText()
     const isConst = (stmt.declarationList.flags & ts.NodeFlags.Const) === 2
@@ -62,6 +72,21 @@ for (const stmt of sourceFile.statements) {
       keyword = Calcium.Keyword.Command.Let
     }
     code.push([indent, [], keyword, name, rhs!])
+  } else if (ts.isIfStatement(stmt)) {
+    const condition = parseExpr(stmt.expression)
+    code.push([indent, [], Calcium.Keyword.Command.Ifs])
+    ++indent
+    code.push([indent, [], Calcium.Keyword.Command.If, condition])
+    ++indent
+    visit(stmt.thenStatement)
+    --indent
+    if (stmt.elseStatement) {
+      code.push([indent, [], Calcium.Keyword.Command.Else])
+      ++indent
+      visit(stmt.elseStatement)
+      --indent
+    }
+    --indent
   } else if (ts.isExpressionStatement(stmt)) {
     if (
       stmt
@@ -97,5 +122,8 @@ for (const stmt of sourceFile.statements) {
   }
 }
 
+for (const stmt of sourceFile.statements) {
+  visit(stmt)
+}
 code.push([1, [], Calcium.Keyword.Command.End])
 console.dir(code, { depth: null })
