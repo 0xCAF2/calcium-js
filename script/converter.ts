@@ -51,6 +51,9 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
       let args = expr.arguments.map((n) => parseExpr(n))
       return [Calcium.Keyword.Expression.Call, ref, args]
     }
+  } else if (ts.isParenthesizedExpression(n)) {
+    const expr = parseExpr(n.expression)
+    return expr
   }
   console.error(n)
   throw new Error('Not implemented')
@@ -152,6 +155,12 @@ function visit(stmt: ts.Node) {
       variableName,
       iterable,
     ])
+    ++indent
+    visit(stmt.statement)
+    --indent
+  } else if (ts.isWhileStatement(stmt)) {
+    const condition = parseExpr(stmt.expression)
+    code.push([indent, [], Calcium.Keyword.Command.While, condition])
     ++indent
     visit(stmt.statement)
     --indent
