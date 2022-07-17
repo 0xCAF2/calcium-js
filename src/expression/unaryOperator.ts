@@ -13,6 +13,12 @@ export default class UnaryOperator {
     switch (this.operator) {
       case Kw.UnaryOperator.Not:
         return !value
+      case Kw.UnaryOperator.Negative:
+        if (typeof value === 'number' || typeof value === 'bigint') {
+          return -value
+        } else {
+          throw new Error('- not supported')
+        }
       default:
         throw new Error(`${this.operator} not implemented`)
     }

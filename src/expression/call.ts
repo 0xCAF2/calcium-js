@@ -15,16 +15,17 @@ export default class Call {
   ) {}
 
   evaluate(env: Environment): AnyType {
-    const func = env.evaluate(this.funcRef)
     const evaluatedArgs = this.args.map((a) => env.evaluate(a))
+    const func = env.evaluate(this.funcRef)
     if (!this.isCalled) {
       this.isCalled = true
       if (typeof func === 'function') {
+        const thisObj = env.thisObj
         const f = Reflect.get(func, Sym.calledByUser)
         if (f) {
-          this.returnedValue = f()(...evaluatedArgs)
+          this.returnedValue = f().apply(thisObj, evaluatedArgs)
         } else {
-          this.returnedValue = func(...evaluatedArgs)
+          this.returnedValue = func.apply(thisObj, evaluatedArgs)
         }
         this.isReturned = true // built-in libraries reach here
         return this.returnedValue

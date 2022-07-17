@@ -21,11 +21,16 @@ export default class Property {
 
   evaluate(env: Environment): AnyType {
     let value: any = env.context.lookUp(this.variableName)?.ref
+    let obj: any
     for (const propName of this.properties) {
       if (value === null || value === undefined || typeof value === 'boolean') {
         throw new PropertyNotExist(propName)
       }
+      obj = value
       value = value[propName]
+    }
+    if (typeof value === 'function') {
+      env.thisObj = obj
     }
     return value
   }

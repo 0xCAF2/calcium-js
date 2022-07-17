@@ -18,6 +18,7 @@ export class Environment {
   context = new Namespace()
   returnedValue: AnyType
   stack: Namespace[] = []
+  thisObj: AnyType
 
   constructor(code: Statement[]) {
     this.code = code
