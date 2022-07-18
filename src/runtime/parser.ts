@@ -115,6 +115,10 @@ export default class Parser {
           const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
           const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
           return new Expr.Call(ref, args)
+        } else if (kw === Kw.Expression.New) {
+          const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
+          const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
+          return new Expr.New(klass, args)
         } else if (elem.length === 3) {
           return this.readBinOp(kw, elem)
         } else if (elem.length === 2) {

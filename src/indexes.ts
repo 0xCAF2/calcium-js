@@ -8,14 +8,11 @@ export enum Statement {
   Keyword = 2,
 }
 
+// commands
+
 export enum Assign {
   Lhs = 3,
   Rhs = 4,
-}
-
-export enum Class {
-  Name = 3,
-  SuperclassName = 4,
 }
 
 export enum Comment {
@@ -56,13 +53,10 @@ export enum Return {
   Expr = 3,
 }
 
+// expressions
+
 export enum Expression {
   Keyword = 0,
-}
-
-export enum Property {
-  VariableName = 1,
-  FirstPropertyName = 2,
 }
 
 export enum BinaryOperator {
@@ -73,6 +67,16 @@ export enum BinaryOperator {
 export enum Call {
   FuncRef = 1,
   Args = 2,
+}
+
+export enum New {
+  Class = 1,
+  Args = 2,
+}
+
+export enum Property {
+  VariableName = 1,
+  FirstPropertyName = 2,
 }
 
 export enum Subscript {
