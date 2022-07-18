@@ -29,6 +29,7 @@ export class Environment {
     if (
       value instanceof Expr.Variable ||
       value instanceof Expr.Property ||
+      value instanceof Expr.Subscript ||
       value instanceof Expr.Call ||
       value instanceof Expr.BinaryOperator ||
       value instanceof Expr.UnaryOperator

@@ -26,7 +26,6 @@ export enum BinaryOperator {
 export enum Command {
   Assign = '=',
   Break = 'break',
-  Class = 'class',
   Comment = '//',
   Const = 'const',
   Continue = 'continue',
@@ -56,8 +55,7 @@ export enum UnaryOperator {
 }
 
 export enum Expression {
-  Arrow = '=>',
   Call = 'call',
-  Super = 'super',
+  New = 'new',
   This = 'this',
 }
