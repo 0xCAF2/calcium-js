@@ -105,12 +105,20 @@ export default class Parser {
         return elem[0] as AnyType[]
       } else {
         const kw = elem[Idx.Expression.Keyword] as string
-        if (kw === Kw.Reference.Variable || kw === Kw.Reference.Property) {
+        if (
+          kw === Kw.Reference.Variable ||
+          kw === Kw.Reference.Property ||
+          kw === Kw.Reference.Subscript
+        ) {
           return this.readRef(elem as Elem.Reference)
         } else if (kw === Kw.Expression.Call) {
           const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
           const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
           return new Expr.Call(ref, args)
+        } else if (kw === Kw.Expression.New) {
+          const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
+          const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
+          return new Expr.New(klass, args)
         } else if (elem.length === 3) {
           return this.readBinOp(kw, elem)
         } else if (elem.length === 2) {
@@ -134,6 +142,12 @@ export default class Parser {
         properties.push(elem[i] as string)
       }
       return new Expr.Property(variableName, properties)
+    } else if (kw === Kw.Reference.Subscript) {
+      const referredObj = this.readRef(
+        elem[Idx.Subscript.ReferredObj] as Elem.Reference
+      )
+      const index = this.readExpr(elem[Idx.Subscript.IndexExpr] as Elem.Any)
+      return new Expr.Subscript(referredObj, index)
     } else {
       throw new Error('Not implemented')
     }

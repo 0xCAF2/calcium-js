@@ -1,3 +1,5 @@
+export class CannotAccessElement extends Error {}
+
 export class CannotAssignToConst extends Error {
   constructor(public readonly name: string) {
     super(`${name} is declared as const.`)

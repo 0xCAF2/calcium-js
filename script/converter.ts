@@ -43,16 +43,6 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
         return [Calcium.Keyword.UnaryOperator.Not, parseExpr(n.operand)]
       case ts.SyntaxKind.MinusToken:
         return [Calcium.Keyword.UnaryOperator.Negative, parseExpr(n.operand)]
-      case ts.SyntaxKind.MinusMinusToken:
-        return [
-          Calcium.Keyword.UnaryOperator.DecrementPrefix,
-          parseExpr(n.operand),
-        ]
-      case ts.SyntaxKind.PlusPlusToken:
-        return [
-          Calcium.Keyword.UnaryOperator.IncrementPrefix,
-          parseExpr(n.operand),
-        ]
     }
   } else if (ts.isArrayLiteralExpression(n)) {
     return [n.elements.map((e) => parseExpr(e))]
@@ -70,6 +60,18 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
     const ref = parseExpr(n.expression)
     let args = n.arguments.map((a) => parseExpr(a))
     return [Calcium.Keyword.Expression.Call, ref, args]
+  } else if (ts.isNewExpression(n)) {
+    const klass = parseExpr(n.expression)
+    if (n.arguments !== undefined) {
+      const args = n.arguments.map((a) => parseExpr(a))
+      return [Calcium.Keyword.Expression.New, klass, args]
+    } else {
+      return [Calcium.Keyword.Expression.New, klass]
+    }
+  } else if (ts.isElementAccessExpression(n)) {
+    const obj = parseExpr(n.expression)
+    const index = parseExpr(n.argumentExpression)
+    return [Calcium.Keyword.Reference.Subscript, obj, index]
   }
   console.error(n)
   throw new Error('Not implemented')
