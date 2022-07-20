@@ -1,6 +1,6 @@
 {
   "name": "calcium-js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Calcium language interpreter on JavaScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
