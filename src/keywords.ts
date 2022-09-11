@@ -50,7 +50,7 @@ export enum Reference {
 
 export enum UnaryOperator {
   BitwiseNot = '~',
-  Negative = '-_',
+  Minus = '-_',
   Not = '!',
 }
 

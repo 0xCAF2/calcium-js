@@ -22,13 +22,17 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
       if (kw === Calcium.Keyword.Reference.Variable) {
         return [Calcium.Keyword.Reference.Property, obj[1], propertyName]
       } else if (kw === Calcium.Keyword.Reference.Property) {
-        return [Calcium.Keyword.Reference.Property, obj, propertyName]
+        return [...obj, propertyName]
       }
     } else {
       throw new Error('invalid property access')
     }
   } else if (ts.isNumericLiteral(n)) {
-    return parseInt(n.text)
+    if (n.text.includes('.')) {
+      return parseFloat(n.text)
+    } else {
+      return parseInt(n.text)
+    }
   } else if (ts.isStringLiteral(n)) {
     return n.text
   } else if (n.kind === ts.SyntaxKind.FalseKeyword) {
@@ -72,6 +76,8 @@ function parseExpr(n: ts.Node): Calcium.Element.Any {
     const obj = parseExpr(n.expression)
     const index = parseExpr(n.argumentExpression)
     return [Calcium.Keyword.Reference.Subscript, obj, index]
+  } else if (ts.isObjectLiteralExpression(n)) {
+    return {} // currently supported an empty object only
   }
   console.error(n)
   throw new Error('Not implemented')
@@ -114,10 +120,7 @@ function visit(stmt: ts.Node) {
           .filter((n) => n.kind === ts.SyntaxKind.BinaryExpression)[0],
         (n) => {
           const assignment = n as ts.BinaryExpression
-          lhs = [
-            Calcium.Keyword.Reference.Variable,
-            (assignment.left as ts.Identifier).text,
-          ]
+          lhs = parseExpr(assignment.left) as Calcium.Element.Reference
           rhs = parseExpr(assignment.right)
           return n
         }

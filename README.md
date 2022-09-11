@@ -2,33 +2,18 @@
 
 Calcium language interpreter on JavaScript
 
-## Compile Calcium and generate dist folder
+## Create a runtime
 
-- Edit tsconfig.json
+```javascript
+import * as calcium from 'calcium-js'
 
-```json
-    "module": "CommonJS",
-```
-
-- Run `tsc`
-- Restore tsconfig.json
-
-## Convert JavaScript code to Calcium
-
-```bash
-tsc script/convert.ts
-node script/convert.js script/tests/hello.js # output Calcium code
-```
-
-## Import and create the Runtime
-
-```typescript
-import * as Calcium from 'calcium-js'
-
-const runtime = new Calcium.Runtime([
+const runtime = new calcium.Runtime([
   [1, [], 'const', 'message', 'Hello, World.'],
   [1, [], 'expr', ['call', ['prop', 'console', 'log'], [['var', 'message']]]],
   [1, [], 'end'],
 ])
 runtime.run() // prints "Hello, World."
 ```
+
+calcium-js uses the global window object so that this library is available in
+a browser environment.
