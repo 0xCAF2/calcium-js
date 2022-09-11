@@ -114,14 +114,14 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
  * @param sourceCode a string value of the source code
  * written by JavaScript's subset
  */
-export function convert(sourceCode: string): calcium.Statement[] {
+export function convert(sourceCode: string): string {
   // The result is an array of Calcium language's code
   const code: calcium.Statement[] = []
   // Each statement has its indent value that represents
   // the indentation of blocks
   let indent = 1
 
-  function _visit(stmt: ts.Node) {
+  const _visit = function (stmt: ts.Node) {
     if (ts.isVariableStatement(stmt)) {
       // a variable or constant declaration with an initial value
 
@@ -211,7 +211,7 @@ export function convert(sourceCode: string): calcium.Statement[] {
 
       // check this if statement is followed by else if or else
       if (stmt.elseStatement !== undefined) {
-        function _visitElseIf(n: ts.Node) {
+        const _visitElseIf = function (n: ts.Node) {
           if (ts.isIfStatement(n)) {
             // output an else if command
             code.push([
@@ -269,6 +269,16 @@ export function convert(sourceCode: string): calcium.Statement[] {
       ++indent
       _visit(stmt.statement)
       --indent
+    } else if (ts.isWhileStatement(stmt)) {
+      // eg. while (n < 10) { ... }
+
+      const condition = parseExpr(stmt.expression)
+      code.push([indent, [], calcium.Keyword.Command.While, condition])
+
+      // visit inside the while block
+      ++indent
+      _visit(stmt.statement)
+      --indent
     } else if (ts.isContinueStatement(stmt)) {
       code.push([indent, [], calcium.Keyword.Command.Continue])
     } else if (ts.isBreakStatement(stmt)) {
@@ -320,5 +330,7 @@ export function convert(sourceCode: string): calcium.Statement[] {
   // conclude with an end command
   code.push([indent, [], calcium.Keyword.Command.End])
 
-  return code
+  // format code into readable lines
+  const lines = code.map((a) => JSON.stringify(a))
+  return `[\n${lines.reduce((c, l) => c + ',\n' + l)}\n]`
 }
