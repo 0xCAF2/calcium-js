@@ -6,7 +6,7 @@ import * as calcium from '.'
  *
  * @param n a node of TypeScript
  */
-function parseExpr(n: ts.Node): calcium.Element.Any {
+export function parseExpr(n: ts.Node): calcium.Element.Any {
   if (ts.isIdentifier(n)) {
     // a simple variable reference
     return [calcium.Keyword.Reference.Variable, n.text]
@@ -109,4 +109,216 @@ function parseExpr(n: ts.Node): calcium.Element.Any {
   throw new Error('not implemented')
 }
 
-// function parseStmt(stmt: ts.Node): calcium.Statement {}
+/**
+ *
+ * @param sourceCode a string value of the source code
+ * written by JavaScript's subset
+ */
+export function convert(sourceCode: string): calcium.Statement[] {
+  // The result is an array of Calcium language's code
+  const code: calcium.Statement[] = []
+  // Each statement has its indent value that represents
+  // the indentation of blocks
+  let indent = 1
+
+  function _visit(stmt: ts.Node) {
+    if (ts.isVariableStatement(stmt)) {
+      // a variable or constant declaration with an initial value
+
+      // an identifier of the variable or constant
+      const name = stmt.declarationList.declarations[0].name.getText()
+
+      // confirm that this statement has a const keyword
+      const isConst = (stmt.declarationList.flags & ts.NodeFlags.Const) !== 0
+
+      // the right hand side value
+      let rhs: calcium.Element.Any = null
+
+      // get the rhs value
+      ts.visitNode(stmt.declarationList.declarations[0].initializer, (n) => {
+        rhs = parseExpr(n)
+        return n // needs to return Node type?
+      })
+
+      // the keyword of this statement
+      let keyword: calcium.Keyword.Command = isConst
+        ? calcium.Keyword.Command.Const
+        : calcium.Keyword.Command.Let
+
+      // push the result of this visit
+      code.push([indent, [], keyword, name, rhs])
+    } else if (ts.isExpressionStatement(stmt)) {
+      // an assignment
+      if (
+        stmt
+          .getChildren()
+          .some(
+            (n) =>
+              n.kind === ts.SyntaxKind.BinaryExpression &&
+              n.getChildAt(1).kind === ts.SyntaxKind.FirstAssignment
+          )
+      ) {
+        // Although assigned later, initial value is required
+        let lhs: calcium.Element.Reference = [
+          calcium.Keyword.Reference.Variable,
+          'x',
+        ]
+        let rhs: calcium.Element.Any = null
+        ts.visitNode(
+          stmt
+            .getChildren()
+            .filter((n) => n.kind === ts.SyntaxKind.BinaryExpression)[0],
+          (n) => {
+            const assignment = n as ts.BinaryExpression
+            lhs = parseExpr(assignment.left) as calcium.Element.Reference
+            rhs = parseExpr(assignment.right)
+            return n // need a return value
+          }
+        )
+        code.push([indent, [], calcium.Keyword.Command.Assign, lhs, rhs])
+      } else {
+        // an expression statement
+        code.push([
+          indent,
+          [],
+          calcium.Keyword.Command.ExprStmt,
+          parseExpr(stmt),
+        ])
+      }
+    } else if (ts.isIfStatement(stmt)) {
+      // an if statement
+
+      // the condition expression of the if statement
+      const condition = parseExpr(stmt.expression)
+
+      // Calcium has nested extra blocks for an if statement
+      code.push([indent, [], calcium.Keyword.Command.Ifs])
+
+      // increment the indent
+      ++indent
+
+      // The condition value decides whether the block should be executed
+      code.push([indent, [], calcium.Keyword.Command.If, condition])
+
+      // increment the indent again
+      ++indent
+
+      // visit inside the if block
+      _visit(stmt.thenStatement)
+
+      // decrement the indent when the if block ends
+      --indent
+
+      // check this if statement is followed by else if or else
+      if (stmt.elseStatement !== undefined) {
+        function _visitElseIf(n: ts.Node) {
+          if (ts.isIfStatement(n)) {
+            // output an else if command
+            code.push([
+              indent,
+              [],
+              calcium.Keyword.Command.ElseIf,
+              parseExpr(n.expression),
+            ])
+
+            // increment the indent for the else if block
+            ++indent
+
+            // visit inside the else if block
+            _visit(n.thenStatement)
+
+            // decrement the indent when the else if block ends
+            --indent
+
+            // continuous else if blocks will be regarded as else if commands
+            if (n.elseStatement !== undefined) {
+              _visitElseIf(n.elseStatement)
+            }
+          } else {
+            // output an else command
+            code.push([indent, [], calcium.Keyword.Command.Else])
+            ++indent
+            _visit(n)
+            --indent
+          }
+        }
+        _visitElseIf(stmt.elseStatement)
+      }
+      // decrement the indent for the ifs command
+      --indent
+    } else if (ts.isForOfStatement(stmt)) {
+      // eg. for (const s of stmts) { ... }
+
+      // A single variable name is supported only.
+      const variableName = (
+        stmt.initializer as ts.VariableDeclarationList
+      ).declarations[0].name.getText()
+
+      const iterable = parseExpr(stmt.expression)
+
+      // push the for of command
+      code.push([
+        indent,
+        [],
+        calcium.Keyword.Command.ForOf,
+        variableName,
+        iterable,
+      ])
+
+      // visit inside the block
+      ++indent
+      _visit(stmt.statement)
+      --indent
+    } else if (ts.isContinueStatement(stmt)) {
+      code.push([indent, [], calcium.Keyword.Command.Continue])
+    } else if (ts.isBreakStatement(stmt)) {
+      code.push([indent, [], calcium.Keyword.Command.Break])
+    } else if (ts.isFunctionDeclaration(stmt)) {
+      // a function name
+      const name = stmt.name!.text
+      // the parameters
+      const params = stmt.parameters.map((p) => p.name.getText())
+
+      code.push([indent, [], calcium.Keyword.Command.Function, name, params])
+
+      // visit inside the function
+      ++indent
+      if (stmt.body !== undefined) {
+        _visit(stmt.body)
+      }
+      --indent
+    } else if (ts.isReturnStatement(stmt)) {
+      if (stmt.expression === undefined) {
+        // No return value exists.
+        code.push([indent, [], calcium.Keyword.Command.Return])
+      } else {
+        // There is the return value.
+        code.push([
+          indent,
+          [],
+          calcium.Keyword.Command.Return,
+          parseExpr(stmt.expression),
+        ])
+      }
+    } else if (ts.isBlock(stmt)) {
+      for (const s of stmt.statements) {
+        _visit(s)
+      }
+    }
+  }
+
+  // parse the source code and start to visit nodes
+  for (const stmt of ts.createSourceFile(
+    'converted.cajs',
+    sourceCode,
+    ts.ScriptTarget.ES2015,
+    true
+  ).statements) {
+    _visit(stmt)
+  }
+
+  // conclude with an end command
+  code.push([indent, [], calcium.Keyword.Command.End])
+
+  return code
+}
