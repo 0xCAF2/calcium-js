@@ -4,6 +4,12 @@ import 'jest-environment-jsdom'
 
 describe('function.js', () => {
   it('function.js', () => {
+    const consoleLog = console.log
+    let result1 = ''
+    const capture1 = (...chunk: any[]) => {
+      result1 += chunk.join(' ').toString() + '\n'
+    }
+    console.log = capture1
     const runtime = new calcium.Runtime(
       [
 [1,[],"function","f",["a","b"]],
@@ -23,5 +29,31 @@ describe('function.js', () => {
 ]
     )
     expect(runtime.run()).toBe(calcium.Status.Terminated)
+
+    let result2 = ''
+    const capture2 = (...chunk: any[]) => {
+      result2 += chunk.join(' ').toString() + '\n'
+    }
+    console.log = capture2
+    {
+    function f(a, b) {
+  if (a === b) {
+    return 0
+  } else {
+    if (a > b) {
+      return 1
+    } else {
+      return -1
+    }
+  }
+}
+const l = [5, 3, 6]
+const l2 = l.sort(f)
+console.log(l2)
+
+    }
+
+    console.log = consoleLog
+    expect(result1).toBe(result2)
   })
 })
