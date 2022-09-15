@@ -2,6 +2,15 @@
 
 Calcium language interpreter on JavaScript
 
+This library uses the global window object. So it is available in a browser
+environment only.
+
+## Install
+
+```bash
+npm install calcium-js
+```
+
 ## Create a runtime
 
 ```javascript
@@ -15,5 +24,13 @@ const runtime = new calcium.Runtime([
 runtime.run() // prints "Hello, World."
 ```
 
-calcium-js uses the global window object so that this library is available in
-a browser environment.
+## Support basic statements
+
+`const`, `let` (declaration), `=` (assignment), `if`, `while`, `for of`
+and `function` statements can be executed as commands.
+
+## The structure of a command
+
+```javascript
+const command = [indent, optional_array, command_keyword, ...args]
+```
