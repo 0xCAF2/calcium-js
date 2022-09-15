@@ -2,8 +2,8 @@
 import * as calcium from '../src'
 import 'jest-environment-jsdom'
 
-describe('hello.js', () => {
-  it('hello.js', () => {
+describe('properties.js', () => {
+  it('properties.js', () => {
     const consoleLog = console.log
     let result1 = ''
     const capture1 = (...chunk: any[]) => {
@@ -12,8 +12,11 @@ describe('hello.js', () => {
     console.log = capture1
     const runtime = new calcium.Runtime(
       [
-[1,[],"const","message","Hello, World."],
-[1,[],"expr",["call",["prop","console","log"],[["var","message"]]]],
+[1,[],"const","obj",{}],
+[1,[],"const","inner",{}],
+[1,[],"=",["prop","inner","prop"],7],
+[1,[],"=",["prop","obj","inner"],["var","inner"]],
+[1,[],"expr",["call",["prop","console","log"],[["prop","obj","inner","prop"]]]],
 [1,[],"end"]
 ]
     )
@@ -25,8 +28,14 @@ describe('hello.js', () => {
     }
     console.log = capture2
     {
-    const message = 'Hello, World.'
-console.log(message)
+    const obj = {}
+
+const inner = {}
+inner.prop = 7
+
+obj.inner = inner
+
+console.log(obj.inner.prop)
 
     }
 
