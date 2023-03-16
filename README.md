@@ -7,7 +7,7 @@ environment only.
 
 ## Install
 
-```bash
+```shell
 npm install calcium-js
 ```
 
@@ -33,4 +33,22 @@ and `function` statements can be executed as commands.
 
 ```javascript
 const command = [indent, optional_array, command_keyword, ...args]
+```
+
+## Using the converter
+
+The converter inputs the subset of JavaScript code and
+outputs the Calcium code. To use it, install the typescript package.
+
+```shell
+npm install typescript
+```
+
+Then import the `convert` function.
+
+```javascript
+import { convert } from 'calcium-js/dist/converter'
+
+const calciumCode = convert("console.log('Hello, World.')")
+// give the code to the Runtime
 ```
