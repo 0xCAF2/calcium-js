@@ -3,11 +3,11 @@ import * as Elem from './element'
 import * as Err from '../error'
 import * as Expr from '../expression'
 import * as Kw from '../keywords'
-import Statement from './statement'
+import { Statement } from './statement'
 import * as Idx from '../indexes'
 import { AnyType } from './types'
 
-export default class Parser {
+export class Parser {
   readonly table = new Map<Kw.Command, (stmt: Statement) => Cmd.Command>()
 
   constructor() {
@@ -136,12 +136,9 @@ export default class Parser {
     if (kw === Kw.Reference.Variable) {
       return new Expr.Variable(elem[Idx.Variable.Name] as string)
     } else if (kw === Kw.Reference.Property) {
-      const variableName = elem[Idx.Property.VariableName] as string
-      const properties: string[] = []
-      for (let i = Idx.Property.FirstPropertyName; i < elem.length; ++i) {
-        properties.push(elem[i] as string)
-      }
-      return new Expr.Property(variableName, properties)
+      const ref = this.readRef(elem[Idx.Property.ReferredObj])
+      const propertyName = elem[Idx.Property.PropertyName]
+      return new Expr.Property(ref, propertyName)
     } else if (kw === Kw.Reference.Subscript) {
       const referredObj = this.readRef(
         elem[Idx.Subscript.ReferredObj] as Elem.Reference

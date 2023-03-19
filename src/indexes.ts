@@ -75,8 +75,8 @@ export enum New {
 }
 
 export enum Property {
-  VariableName = 1,
-  FirstPropertyName = 2,
+  ReferredObj = 1,
+  PropertyName = 2,
 }
 
 export enum Subscript {

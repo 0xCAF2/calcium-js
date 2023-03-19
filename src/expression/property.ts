@@ -1,36 +1,27 @@
+import { Reference } from '.'
 import { NameNotFound, PropertyNotExist } from '../error'
 import { Environment } from '../runtime/environment'
 import { AnyType } from '../runtime/types'
 
-export default class Property {
+export class Property {
   constructor(
-    public readonly variableName: string,
-    public readonly properties: string[]
+    public readonly referredObj: Reference,
+    public readonly propertyName: string
   ) {}
 
   assign(value: AnyType, env: Environment) {
-    let target = env.context.lookUp(this.variableName)?.ref as any
-    if (target === undefined) {
-      throw new NameNotFound(this.variableName)
-    }
-    for (const propName of this.properties.slice(0, -1)) {
-      target = target[propName]
-    }
-    target[this.properties.at(-1) as string] = value
+    let target = env.evaluate(this.referredObj) as any
+    target[this.propertyName] = value
   }
 
   evaluate(env: Environment): AnyType {
-    let value: any = env.context.lookUp(this.variableName)?.ref
-    let obj: any
-    for (const propName of this.properties) {
-      if (value === null || value === undefined || typeof value === 'boolean') {
-        throw new PropertyNotExist(propName)
-      }
-      obj = value
-      value = value[propName]
+    const ref = env.evaluate(this.referredObj) as any
+    if (ref === null || ref === undefined || typeof ref === 'boolean') {
+      throw new PropertyNotExist(this.propertyName)
     }
+    const value = ref[this.propertyName]
     if (typeof value === 'function') {
-      env.thisObj = obj
+      env.thisObj = ref
     }
     return value
   }

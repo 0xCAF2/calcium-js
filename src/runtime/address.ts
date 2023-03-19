@@ -1,7 +1,7 @@
 /**
  * Represents the point of execution.
  */
-export default class Address {
+export class Address {
   /**
    *
    * @param indent corresponds to the indent of a block

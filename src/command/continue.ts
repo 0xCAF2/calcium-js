@@ -3,7 +3,7 @@ import { InvalidContinue } from '../error'
 import { Kind } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 
-export default class Continue implements Command {
+export class Continue implements Command {
   execute(env: Environment): void {
     while (true) {
       const block = env.blocks.pop()

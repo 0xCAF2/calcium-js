@@ -1,8 +1,8 @@
 import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import { convert } from '../src/converter'
 
-readdirSync('./tests').forEach((fileName) => {
-  const jsCode = readFileSync(`./tests/${fileName}`).toString()
+readdirSync('./test').forEach((fileName) => {
+  const jsCode = readFileSync(`./test/${fileName}`).toString()
   const calciumCode = convert(jsCode)
   const testCode = `
 import * as calcium from '../src'

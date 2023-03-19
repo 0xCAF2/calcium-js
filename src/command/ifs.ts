@@ -5,7 +5,7 @@ import { Environment } from '../runtime/environment'
 /**
  * a parent block of `If`, `ElseIf` and `Else`.
  */
-export default class Ifs implements Command {
+export class Ifs implements Command {
   execute(env: Environment): void {
     const block = new Block(
       Kind.Ifs,

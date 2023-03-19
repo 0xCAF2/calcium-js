@@ -13,7 +13,7 @@ describe('float.js', () => {
     const runtime = new calcium.Runtime(
       [
 [1,[],"const","pi",3.14],
-[1,[],"expr",["call",["prop","console","log"],[["var","pi"]]]],
+[1,[],"expr",["call",["prop",["var","console"],"log"],[["var","pi"]]]],
 [1,[],"end"]
 ]
     )

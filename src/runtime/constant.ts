@@ -1,12 +1,12 @@
 import { CannotAssignToConst } from '../error'
 import { Environment } from '../runtime/environment'
 import { AnyType } from '../runtime/types'
-import Variable from './variable'
+import { Variable } from './variable'
 
 /**
  * a reference to the value
  */
-export default class Constant extends Variable {
+export class Constant extends Variable {
   constructor(public readonly name: string, public readonly ref: AnyType) {
     super(name, ref)
   }

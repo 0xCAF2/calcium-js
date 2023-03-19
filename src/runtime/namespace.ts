@@ -1,10 +1,10 @@
-import Variable from './variable'
-import Constant from './constant'
+import { Variable } from './variable'
+import { Constant } from './constant'
 
 /**
  * saves variables, functions, and so on in a specific scope
  */
-export default class Namespace {
+export class Namespace {
   /**
    * saves by key value pairs
    */

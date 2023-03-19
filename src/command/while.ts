@@ -3,7 +3,7 @@ import { Expression } from '../expression'
 import { Block, Kind, Result } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 
-export default class While implements Command {
+export class While implements Command {
   constructor(public readonly condition: Expression) {}
   execute(env: Environment): void {
     const block = new Block(

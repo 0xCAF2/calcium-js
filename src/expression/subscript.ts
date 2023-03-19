@@ -3,7 +3,7 @@ import { CannotAccessElement } from '../error'
 import { Environment } from '../runtime/environment'
 import { AnyType } from '../runtime/types'
 
-export default class Subscript {
+export class Subscript {
   constructor(
     public readonly referredObj: Reference,
     public readonly index: Expression

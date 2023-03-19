@@ -4,7 +4,7 @@ import { Reference } from './'
 import { Environment } from '../runtime/environment'
 import * as Sym from '../runtime/symbols'
 
-export default class Call {
+export class Call {
   private returnedValue: AnyType
   private isCalled = false
   private isReturned = false
@@ -21,6 +21,7 @@ export default class Call {
       this.isCalled = true
       if (typeof func === 'function') {
         const thisObj = env.thisObj
+        env.thisObj = undefined
         const f = Reflect.get(func, Sym.calledByUser)
         if (f) {
           this.returnedValue = f().apply(thisObj, evaluatedArgs)

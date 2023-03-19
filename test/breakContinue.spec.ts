@@ -17,9 +17,9 @@ describe('breakContinue.js', () => {
 [3,[],"if",["===",["var","ch"],"a"]],
 [4,[],"break"],
 [3,[],"else"],
-[4,[],"expr",["call",["prop","console","log"],[["var","ch"]]]],
+[4,[],"expr",["call",["prop",["var","console"],"log"],[["var","ch"]]]],
 [4,[],"continue"],
-[2,[],"expr",["call",["prop","console","log"],["NG"]]],
+[2,[],"expr",["call",["prop",["var","console"],"log"],["NG"]]],
 [1,[],"end"]
 ]
     )

@@ -23,8 +23,8 @@ describe('function.js', () => {
 [5,[],"else"],
 [6,[],"return",["-_",1]],
 [1,[],"const","l",[[5,3,6]]],
-[1,[],"const","l2",["call",["prop","l","sort"],[["var","f"]]]],
-[1,[],"expr",["call",["prop","console","log"],[["var","l2"]]]],
+[1,[],"const","l2",["call",["prop",["var","l"],"sort"],[["var","f"]]]],
+[1,[],"expr",["call",["prop",["var","console"],"log"],[["var","l2"]]]],
 [1,[],"end"]
 ]
     )

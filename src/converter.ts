@@ -12,28 +12,11 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
     return [calcium.Keyword.Reference.Variable, n.text]
   } else if (ts.isPropertyAccessExpression(n)) {
     // property access chains
-
     // the last element of property names
     const propertyName = n.name.text
-
     // the object including other properties
     const obj = parseExpr(n.expression)
-
-    if (Array.isArray(obj)) {
-      // obj should be a Calcium expression represented by an array.
-
-      const kw = obj[0] // the keyword in Calcium language
-
-      if (kw === calcium.Keyword.Reference.Variable) {
-        // eg. obj.prop, which has only one property access
-        return [calcium.Keyword.Reference.Property, obj[1], propertyName]
-      } else if (kw === calcium.Keyword.Reference.Property) {
-        // eg. obj.propA.propB
-        return [...obj, propertyName]
-      }
-    } else {
-      throw new Error('error in property access')
-    }
+    return [calcium.Keyword.Reference.Property, obj, propertyName]
   } else if (ts.isNumericLiteral(n)) {
     if (n.text.includes('.')) {
       // eg. 3.14

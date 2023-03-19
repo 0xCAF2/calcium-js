@@ -4,11 +4,11 @@ import { CallingCmd } from './callingCmd'
 import { Environment } from './environment'
 import * as Idx from '../indexes'
 import * as Kw from '../keywords'
-import Parser from './parser'
-import Statement from './statement'
-import Status from './status'
+import { Parser } from './parser'
+import { Statement } from './statement'
+import { Status } from './status'
 
-export default class Runtime {
+export class Runtime {
   /**
    * used for the step execution of each line.
    */

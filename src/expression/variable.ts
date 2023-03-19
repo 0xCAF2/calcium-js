@@ -1,9 +1,9 @@
 import { CannotAssignToConst, NameNotFound } from '../error'
-import Constant from '../runtime/constant'
+import { Constant } from '../runtime/constant'
 import { Environment } from '../runtime/environment'
 import { AnyType } from '../runtime/types'
 
-export default class Variable {
+export class Variable {
   constructor(public readonly name: string) {}
 
   assign(value: AnyType, env: Environment) {

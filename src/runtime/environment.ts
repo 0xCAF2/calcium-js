@@ -1,10 +1,10 @@
-import Address from './address'
+import { Address } from './address'
 import { Block, Result } from './block'
 import { CallingCmd } from './callingCmd'
 import * as Err from '../error'
 import * as Idx from '../indexes'
-import Namespace from './namespace'
-import Statement from './statement'
+import { Namespace } from './namespace'
+import { Statement } from './statement'
 import * as Expr from '../expression'
 import { AnyType } from './types'
 

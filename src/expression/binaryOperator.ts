@@ -3,7 +3,7 @@ import { Environment } from '../runtime/environment'
 import { AnyType } from '../runtime/types'
 import * as Kw from '../keywords'
 
-export default class BinaryOperator {
+export class BinaryOperator {
   constructor(
     public readonly operator: string,
     public readonly left: Expression,

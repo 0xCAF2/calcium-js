@@ -1,11 +1,11 @@
 import { Expression } from '../expression'
 import { Environment } from '../runtime/environment'
-import Conditional from './conditional'
+import { Conditional } from './conditional'
 
 /**
  * if statement
  */
-export default class If extends Conditional {
+export class If extends Conditional {
   /**
    *
    * @param condition an expression to determine whether
