@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "CommonJS",
+    "module": "ES2015",
+    "moduleResolution": "nodenext",
     "lib": ["ES2017", "ES7", "ES6", "DOM"],
     "strict": true,
     "declaration": true,

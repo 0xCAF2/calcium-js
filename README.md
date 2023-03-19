@@ -40,7 +40,7 @@ outputs the Calcium code as JSON. To use it, `typescript` package is required.
 Then import the `convert` function.
 
 ```javascript
-import { convert } from 'calcium-js/dist/converter'
+import { convert } from 'calcium-js/converter'
 
 const calciumCode = convert("console.log('Hello, World.')")
 // give the code to the runtime and call run() method.
