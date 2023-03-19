@@ -10,7 +10,8 @@
   "scripts": {
     "build": "node_modules/typescript/bin/tsc",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "clear": "\\rm src/*.js src/*/*.js script/generateTest.js"
   },
   "repository": {
     "type": "git",
