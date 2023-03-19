@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2015",
     "module": "ES2015",
-    "moduleResolution": "nodenext",
-    "lib": ["ES2017", "ES7", "ES6", "DOM"],
+    "moduleResolution": "node",
     "strict": true,
     "declaration": true,
     "pretty": true,
