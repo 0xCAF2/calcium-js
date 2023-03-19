@@ -22,6 +22,4 @@ type Keyword =
 /**
  * a JSON array that represents one line
  */
-type Statement = [number, unknown[], Keyword, ...Element.Any[]]
-
-export default Statement
+export type Statement = [number, unknown[], Keyword, ...Element.Any[]]

@@ -1,9 +1,9 @@
 import { Command } from '.'
 import { Expression } from '../expression'
 import { Environment } from '../runtime/environment'
-import Variable from '../runtime/variable'
+import { Variable } from '../runtime/variable'
 
-export default class Let implements Command {
+export class Let implements Command {
   constructor(
     public readonly name: string,
     public readonly value?: Expression

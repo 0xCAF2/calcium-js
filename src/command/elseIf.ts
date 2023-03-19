@@ -1,3 +1,3 @@
-import If from './if'
+import { If } from './if'
 
-export default class ElseIf extends If {}
+export class ElseIf extends If {}

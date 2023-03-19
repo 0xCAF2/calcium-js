@@ -1,5 +1,5 @@
 import { Command } from '../command'
-import Address from './address'
+import { Address } from './address'
 
 export class CallingCmd {
   addr: Address

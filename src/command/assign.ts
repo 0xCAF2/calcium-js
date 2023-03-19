@@ -2,7 +2,7 @@ import { Command } from '.'
 import { Expression, Reference } from '../expression'
 import { Environment } from '../runtime/environment'
 
-export default class Assign implements Command {
+export class Assign implements Command {
   constructor(
     public readonly lhs: Reference,
     public readonly rhs: Expression

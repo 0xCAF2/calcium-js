@@ -1,16 +1,16 @@
 import { Command } from '.'
 import { FunctionCalled, InvalidEnd } from '../error'
 import { Block, Kind, Result } from '../runtime/block'
-import Constant from '../runtime/constant'
+import { Constant } from '../runtime/constant'
 import { Environment } from '../runtime/environment'
-import Namespace from '../runtime/namespace'
+import { Namespace } from '../runtime/namespace'
 import { AnyType } from '../runtime/types'
 import * as Sym from '../runtime/symbols'
-import Parser from '../runtime/parser'
-import End from './end'
-import Variable from '../runtime/variable'
+import { Parser } from '../runtime/parser'
+import { End } from './end'
+import { Variable } from '../runtime/variable'
 
-export default class Function implements Command {
+export class Function implements Command {
   constructor(
     public readonly funcName: string,
     public readonly params: string[]

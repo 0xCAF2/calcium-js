@@ -3,7 +3,7 @@ import { InvalidBreak } from '../error'
 import { Kind } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 
-export default class Break implements Command {
+export class Break implements Command {
   execute(env: Environment): void {
     while (true) {
       const block = env.blocks.pop()

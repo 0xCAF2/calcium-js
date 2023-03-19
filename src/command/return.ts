@@ -3,7 +3,7 @@ import { Expression } from '../expression'
 import { Kind } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 
-export default class Return implements Command {
+export class Return implements Command {
   public readonly hasExplicitValue: boolean
   public readonly expr?: Expression
   constructor(...args: Expression[]) {

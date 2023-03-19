@@ -1,10 +1,10 @@
 import { Command } from '.'
 import { Expression } from '../expression'
 import { Block, Kind, Result } from '../runtime/block'
-import Constant from '../runtime/constant'
+import { Constant } from '../runtime/constant'
 import { Environment } from '../runtime/environment'
 
-export default class ForOf implements Command {
+export class ForOf implements Command {
   constructor(
     public readonly variableName: string,
     public readonly iterable: Expression

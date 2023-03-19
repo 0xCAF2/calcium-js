@@ -4,7 +4,7 @@ import { Reference } from './'
 import { Environment } from '../runtime/environment'
 import * as Sym from '../runtime/symbols'
 
-export default class Call {
+export class Call {
   private returnedValue: AnyType
   private isCalled = false
   private isReturned = false

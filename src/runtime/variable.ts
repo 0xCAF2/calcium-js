@@ -5,7 +5,7 @@ import { AnyType } from './types'
 /**
  * a reference to the value
  */
-export default class Variable {
+export class Variable {
   constructor(public readonly name: string, public ref: AnyType) {}
 
   /**

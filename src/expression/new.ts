@@ -1,7 +1,7 @@
 import { Expression, Reference } from '.'
 import { Environment } from '../runtime/environment'
 
-export default class New {
+export class New {
   constructor(
     public readonly klass: Reference,
     public readonly args: Expression[]

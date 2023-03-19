@@ -1,5 +1,5 @@
 import { Environment } from '../runtime/environment'
-import Address from './address'
+import { Address } from './address'
 
 /**
  * when returns true, the block should be executed.
