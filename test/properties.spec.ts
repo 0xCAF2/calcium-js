@@ -14,9 +14,9 @@ describe('properties.js', () => {
       [
 [1,[],"const","obj",{}],
 [1,[],"const","inner",{}],
-[1,[],"=",["prop","inner","prop"],7],
-[1,[],"=",["prop","obj","inner"],["var","inner"]],
-[1,[],"expr",["call",["prop","console","log"],[["prop","obj","inner","prop"]]]],
+[1,[],"=",["prop",["var","inner"],"prop"],7],
+[1,[],"=",["prop",["var","obj"],"inner"],["var","inner"]],
+[1,[],"expr",["call",["prop",["var","console"],"log"],[["prop",["prop",["var","obj"],"inner"],"prop"]]]],
 [1,[],"end"]
 ]
     )

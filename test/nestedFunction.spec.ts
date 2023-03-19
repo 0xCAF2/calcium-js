@@ -20,7 +20,7 @@ describe('nestedFunction.js', () => {
 [1,[],"let","x",7],
 [1,[],"let","y",3],
 [1,[],"let","z",["call",["var","f"],[["var","x"],["var","y"]]]],
-[1,[],"expr",["call",["prop","console","log"],[["var","z"]]]],
+[1,[],"expr",["call",["prop",["var","console"],"log"],[["var","z"]]]],
 [1,[],"end"]
 ]
     )

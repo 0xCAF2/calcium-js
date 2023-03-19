@@ -136,9 +136,9 @@ export class Parser {
     if (kw === Kw.Reference.Variable) {
       return new Expr.Variable(elem[Idx.Variable.Name] as string)
     } else if (kw === Kw.Reference.Property) {
-      const variableName = this.readRef(elem[Idx.Property.ReferredObj])
+      const ref = this.readRef(elem[Idx.Property.ReferredObj])
       const propertyName = elem[Idx.Property.PropertyName]
-      return new Expr.Property(variableName, propertyName)
+      return new Expr.Property(ref, propertyName)
     } else if (kw === Kw.Reference.Subscript) {
       const referredObj = this.readRef(
         elem[Idx.Subscript.ReferredObj] as Elem.Reference

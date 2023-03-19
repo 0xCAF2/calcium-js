@@ -13,7 +13,7 @@ describe('subscript.js', () => {
     const runtime = new calcium.Runtime(
       [
 [1,[],"const","a",[[73]]],
-[1,[],"expr",["call",["prop","console","log"],[["sub",["var","a"],0]]]],
+[1,[],"expr",["call",["prop",["var","console"],"log"],[["sub",["var","a"],0]]]],
 [1,[],"end"]
 ]
     )

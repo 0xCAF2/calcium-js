@@ -21,6 +21,7 @@ export class Call {
       this.isCalled = true
       if (typeof func === 'function') {
         const thisObj = env.thisObj
+        env.thisObj = undefined
         const f = Reflect.get(func, Sym.calledByUser)
         if (f) {
           this.returnedValue = f().apply(thisObj, evaluatedArgs)
