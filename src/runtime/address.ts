@@ -26,7 +26,7 @@ export class Address {
    * @param address another address
    * @returns whether two addresses are at same position
    */
-  isAt(address: Address): boolean {
+  isLocatedAt(address: Address): boolean {
     return (
       this.indent === address.indent &&
       this.line === address.line &&
