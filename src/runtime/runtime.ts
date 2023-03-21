@@ -85,7 +85,7 @@ export class Runtime {
     const callerAddr = this.env.address.clone()
     if (
       this.env.calls.length > 0 &&
-      callerAddr.isLocatedAt(this.env.calls[this.env.calls.length - 1].addr)
+      callerAddr.isLocatedAt(this.env.calls.at(-1)!.addr)
     ) {
       cmd = this.env.calls.pop()!.cmd
     }
