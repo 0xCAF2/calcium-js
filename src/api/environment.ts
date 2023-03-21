@@ -1,5 +1,10 @@
+import { Address } from './address'
 import { Statement } from './statement'
 
 export class Environment {
-  constructor(public readonly code: Statement[]) {}
+  address: Address
+
+  constructor(public readonly code: Statement[]) {
+    this.address = new Address(1, 0)
+  }
 }
