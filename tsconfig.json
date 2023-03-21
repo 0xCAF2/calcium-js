@@ -14,5 +14,5 @@
     "esModuleInterop": true,
     "sourceMap": true
   },
-  "include": ["src/*", "src/*/*"]
+  "include": ["src/*", "src/*/*", "src/lang/js/*"]
 }
