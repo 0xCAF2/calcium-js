@@ -1,4 +1,4 @@
-export type Statement = [number, any, string, ...any[]]
+export type Statement = [number, any, string, any[]]
 
 export enum Index {
   Indent = 0,

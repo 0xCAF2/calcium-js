@@ -1,35 +1,35 @@
 export class Address {
   constructor(
-    public x: number,
-    public y: number,
+    public indent: number,
+    public index: number,
     public calls = 0,
-    public fileId = 0
+    public fileName = 'main'
   ) {}
 
   clone(): Address {
-    return new Address(this.x, this.y, this.calls, this.fileId)
+    return new Address(this.indent, this.index, this.calls, this.fileName)
   }
 
   isLocatedAt(addr: Address): boolean {
     return (
-      addr.x === this.x &&
-      addr.y === this.y &&
+      addr.indent === this.indent &&
+      addr.index === this.index &&
       addr.calls === this.calls &&
-      addr.fileId === this.fileId
+      addr.fileName === this.fileName
     )
   }
 
   jump(to: Address) {
-    this.x = to.x
-    this.y = to.y
-    this.fileId = to.fileId
+    this.indent = to.indent
+    this.index = to.index
+    this.fileName = to.fileName
   }
 
-  shiftX(delta: number) {
-    this.x += delta
+  shift(deltaIndent: number) {
+    this.indent += deltaIndent
   }
 
-  stepY(delta: number) {
-    this.y += delta
+  step(deltaIndex: number) {
+    this.index += deltaIndex
   }
 }
