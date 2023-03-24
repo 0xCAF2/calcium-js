@@ -39,7 +39,7 @@ export class Namespace {
         if (key === 'document') {
           return undefined
         } else {
-          return new Constant(key, window[key as any])
+          return new Constant(key, (window || global)[key as any])
         }
       } else {
         return value
