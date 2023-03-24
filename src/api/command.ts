@@ -1,5 +1,6 @@
+import { Behavior } from './behavior'
 import { Environment } from './environment'
 
 export interface Command {
-  execute(env: Environment): void
+  execute(env: Environment): Behavior
 }
