@@ -4,9 +4,9 @@ Each command is represented as a JSON array.
 
 ```json
 [
-  [1, "=", [["var", "message"], "Hello, World."]],
-  [1, "print", [["var", "message"]]],
-  [1, "end", []]
+  [1, [], "=", ["var", "message"], "Hello, World."],
+  [1, [], "print", ["var", "message"]],
+  [1, [], "end"]
 ]
 ```
 
@@ -14,8 +14,9 @@ Basically, the commands are equivalent to statements.
 The meaning of each element in the command is as follows:
 
 0. Indent (integer)
-1. Command keyword (`string`)
-2. Arguments (`array`)
+1. Option (any)
+2. Command keyword (`string`)
+3. (After that) Arguments (`array`)
 
 ## What is the "indent"?
 
@@ -26,8 +27,8 @@ for example `if` or `while`.
 ```json
 [
   ...
-  [1, "if", [["==", ["var", "i"], 10]]],
-  [2, "print", [["var", "i"]]],
+  [1, [], "if", ["==", ["var", "i"], 10]],
+  [2, [], "print", ["var", "i"]],
   ...
 ]
 ```
