@@ -1,4 +1,5 @@
 import { Command } from './command'
+import { Element } from './element'
 import { CommandNotDefined } from './error'
 import { Expression, Reference } from './expression'
 import { Index, Statement } from './statement'

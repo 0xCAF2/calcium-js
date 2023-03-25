@@ -2,8 +2,8 @@
   "name": "calcium-js",
   "version": "0.0.8",
   "description": "Calcium runtime on JavaScript",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/api/index.js",
+  "types": "dist/api/index.d.ts",
   "files": [
     "dist"
   ],
