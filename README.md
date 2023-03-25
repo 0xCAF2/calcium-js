@@ -1,34 +1,45 @@
-# calcium-js
+## Calcium is run based on commands.
 
-Calcium language runtime on JavaScript
+Each command is represented as a JSON array.
 
-## How to create and execute code
-
-```javascript
-import * as calcium from 'calcium-js'
-
-const runtime = new calcium.Runtime([
-  [1, [], 'const', 'message', 'Hello, World.'],
-  [
-    1,
-    [],
-    'expr',
-    ['call', ['prop', ['var', 'console'], 'log'], [['var', 'message']]],
-  ],
-  [1, [], 'end'],
-])
-runtime.run() // prints "Hello, World."
+```json
+[
+  [1, "=", [["var", "message"], "Hello, World."]],
+  [1, "print", [["var", "message"]]],
+  [1, "end", []]
+]
 ```
 
-Calcium code is represented by JSON.
+Basically, the commands are equivalent to statements.
+The meaning of each element in the command is as follows:
 
-## Supported basic statements
+0. Indent (integer)
+1. Command keyword (`string`)
+2. Arguments (`array`)
 
-`const`, `let` (declaration), `=` (assignment), `if`, `while`, `for of`
-and `function` are available.
+## What is the "indent"?
 
-## The structure of a command
+Indent in Calcium is what the Python language calls indentation.
+Increase the value of the indent if you need a block,
+for example `if` or `while`.
 
-```javascript
-const command = [indent, optional_array, command_keyword, ...args]
+```json
+[
+  ...
+  [1, "if", [["==", ["var", "i"], 10]]],
+  [2, "print", [["var", "i"]]],
+  ...
+]
 ```
+
+The code above corresponds to:
+
+```python
+if i == 10:
+    print(i)
+```
+
+## Is the Calcium an esoteric language or just a joke?
+
+No, I don't think so. [Here is one of the applications](https://calcium-editor.web.app/en/).
+It is suitable for environments that generate code programmatically.
