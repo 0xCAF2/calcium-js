@@ -10,9 +10,9 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "strictNullChecks": true,
-    "outDir": "dist",
+    "outDir": "dist/api",
     "esModuleInterop": true,
     "sourceMap": true
   },
-  "include": ["src/*", "src/*/*"]
+  "include": ["src/api/*"]
 }
