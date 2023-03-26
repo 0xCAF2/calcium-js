@@ -16,7 +16,7 @@ export abstract class Parser {
     if (generator) {
       return generator(this, stmt)
     } else {
-      throw new CommandNotDefined()
+      throw new CommandNotDefined(keyword)
     }
   }
 }
