@@ -14,11 +14,14 @@ export abstract class Parser {
     const keyword = stmt[Index.Command]
     const generator = this.table.get(keyword)
     if (generator) {
-      return generator(stmt)
+      return generator(this, stmt)
     } else {
       throw new CommandNotDefined()
     }
   }
 }
 
-export type CommandTable = Map<string, (stmt: Statement) => Command>
+export type CommandTable = Map<
+  string,
+  (parser: Parser, stmt: Statement) => Command
+>
