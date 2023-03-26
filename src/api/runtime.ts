@@ -56,8 +56,7 @@ export class Runtime {
   }
 
   step(): Status {
-    const lastIndex = this.env.code.length - 1
-    if (this.currentIndex > lastIndex || this.currentIndent === 0) {
+    if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
       return Status.Terminated
     }
 
@@ -72,7 +71,7 @@ export class Runtime {
       this.forward()
     }
 
-    if (this.currentIndex > lastIndex || this.currentIndent === 0) {
+    if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
       return Status.Terminated
     }
     if (this.breakpoints.has(this.currentIndex)) {
@@ -91,6 +90,10 @@ export class Runtime {
 
   get currentLine(): Statement {
     return this.env.code[this.env.address.index]
+  }
+
+  get lastIndex(): number {
+    return this.env.code.length - 1
   }
 }
 
