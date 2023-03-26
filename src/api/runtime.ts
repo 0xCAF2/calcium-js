@@ -70,13 +70,15 @@ export class Runtime {
     } else {
       this.forward()
     }
+    if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
+      return Status.Terminated
+    }
 
     // currentLine should be the next statement.
     let nextStmt = this.currentLine
     while (this.events?.skip?.(nextStmt, this)) {
       nextStmt = this.currentLine
     }
-
     if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
       return Status.Terminated
     }
