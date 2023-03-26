@@ -2,7 +2,7 @@ import { Primitive } from './element'
 import { Environment } from './environment'
 import { Any } from './type'
 
-export interface Assignable {
+export interface Assignable extends Reference {
   assign(value: Any, env: Environment): void
 }
 
