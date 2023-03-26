@@ -35,6 +35,9 @@ export class Runtime {
   forward() {
     while (this.currentIndex < this.env.code.length) {
       this.env.address.step(1)
+      if (this.currentIndex >= this.env.code.length) {
+        return
+      }
       if (this.currentIndent === this.currentLine[Index.Indent]) {
         return
       }
