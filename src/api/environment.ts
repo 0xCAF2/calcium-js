@@ -1,11 +1,13 @@
 import { Address } from './address'
-import { Expression, Reference } from './expression'
+import { Expression } from './expression'
+import { Namespace } from './namespace'
 import { Statement } from './statement'
 import { Any } from './type'
 
 export class Environment {
   address: Address
-  code: Statement[]
+  readonly code: Statement[]
+  readonly context = new Namespace()
 
   constructor(params: EnvironmentParams) {
     this.address = new Address(1, 0)
