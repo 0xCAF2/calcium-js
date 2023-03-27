@@ -9,7 +9,7 @@ export class Environment {
   address: Address
   readonly code: Statement[]
   readonly context = new Namespace()
-  previousBehavior = Behavior.Forward
+  previousBehavior = Behavior.Stop
 
   constructor(params: EnvironmentParams) {
     this.address = new Address(1, 0)

@@ -61,9 +61,8 @@ export class Runtime {
     }
 
     const cmd = this.parser.readStmt(this.currentLine)
-    this.events?.beforeCommandExecuted?.(cmd, this)
     const result = cmd.execute(this.env)
-    this.events?.afterCommandExecuted?.(cmd, this)
+    this.env.previousBehavior = result
 
     if (result === Behavior.Loop) {
       this.backward()
@@ -76,7 +75,7 @@ export class Runtime {
 
     // currentLine should be the next statement.
     let nextStmt = this.currentLine
-    while (this.events?.skip?.(nextStmt, this)) {
+    while (this.events?.skip(nextStmt, this)) {
       nextStmt = this.currentLine
     }
     if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
