@@ -35,6 +35,9 @@ export class Runtime {
   forward() {
     while (this.currentIndex < this.env.code.length) {
       this.env.address.step(1)
+      if (this.currentIndex >= this.env.code.length) {
+        return
+      }
       if (this.currentIndent === this.currentLine[Index.Indent]) {
         return
       }
@@ -53,23 +56,29 @@ export class Runtime {
   }
 
   step(): Status {
-    const lastIndex = this.env.code.length - 1
-    if (this.currentIndex > lastIndex || this.currentIndent === 0) {
+    if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
       return Status.Terminated
     }
 
     const cmd = this.parser.readStmt(this.currentLine)
-    this.events?.beforeCommandExecuted(cmd, this)
     const result = cmd.execute(this.env)
-    this.events?.afterCommandExecuted(cmd, this)
+    this.env.previousBehavior = result
 
     if (result === Behavior.Loop) {
       this.backward()
     } else {
       this.forward()
     }
+    if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
+      return Status.Terminated
+    }
 
-    if (this.currentIndex > lastIndex || this.currentIndent === 0) {
+    // currentLine should be the next statement.
+    let nextStmt = this.currentLine
+    while (this.events?.skip(nextStmt, this)) {
+      nextStmt = this.currentLine
+    }
+    if (this.currentIndex > this.lastIndex || this.currentIndent === 0) {
       return Status.Terminated
     }
     if (this.breakpoints.has(this.currentIndex)) {
@@ -88,6 +97,10 @@ export class Runtime {
 
   get currentLine(): Statement {
     return this.env.code[this.env.address.index]
+  }
+
+  get lastIndex(): number {
+    return this.env.code.length - 1
   }
 }
 
