@@ -1,6 +1,6 @@
 {
   "name": "calcium-js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Calcium runtime on JavaScript",
   "main": "dist/api/index.js",
   "types": "dist/api/index.d.ts",
