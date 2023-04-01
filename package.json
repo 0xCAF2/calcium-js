@@ -4,6 +4,7 @@
   "description": "Calcium runtime on JavaScript",
   "main": "dist/api/index.js",
   "types": "dist/api/index.d.ts",
+  "type": "module",
   "files": [
     "dist"
   ],
