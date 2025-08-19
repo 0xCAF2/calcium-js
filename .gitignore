@@ -1,10 +1,5 @@
 node_modules
 .vscode
-
-.DS_Store
-
 dist
-
-script/generateTest.js
-
-src/**/*.js
+*.log
+.DS_Store
