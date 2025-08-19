@@ -1,9 +1,9 @@
 {
   "name": "calcium-js",
-  "version": "0.3.1",
-  "description": "Calcium runtime on JavaScript",
-  "main": "dist/api/index.js",
-  "types": "dist/api/index.d.ts",
+  "version": "0.5.0",
+  "description": "A Calcium interpreter on JavaScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "files": [
     "dist"
@@ -23,7 +23,7 @@
     "runtime",
     "interpreter"
   ],
-  "author": "0xCAF2 <pub@0xcaf2.dev>",
+  "author": "Roki Turner <roki@0xcaf2.dev>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/0xCAF2/calcium-js/issues"

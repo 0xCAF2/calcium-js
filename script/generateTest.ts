@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync, writeFileSync } from 'fs'
-import { convert } from '../src/converter'
+import { convert } from '../src/lang/js/converter'
 
 readdirSync('./test').forEach((fileName) => {
   const jsCode = readFileSync(`./test/${fileName}`).toString()
