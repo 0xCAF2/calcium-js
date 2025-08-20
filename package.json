@@ -1,18 +1,15 @@
 {
-  "name": "tsdown-starter",
-  "version": "0.0.0",
-  "description": "A starter for creating a TypeScript package.",
+  "name": "calcium-js",
+  "version": "0.5.0",
+  "description": "A Calcium language interpreter on JavaScript.",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://github.com/author/library#readme",
-  "bugs": {
-    "url": "https://github.com/author/library/issues"
-  },
+  "homepage": "https://github.com/0xCAF2/calcium-js#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/author/library.git"
+    "url": "git+https://github.com/0xCAF2/calcium-js.git"
   },
-  "author": "Author Name <author.name@mail.com>",
+  "author": "Roki Turner <roki@0xcaf2.dev>",
   "files": [
     "dist"
   ],
