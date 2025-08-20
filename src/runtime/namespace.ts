@@ -14,7 +14,7 @@ export class Namespace {
    *
    * @param parent nesting scope
    */
-  constructor(public readonly parent?: Namespace) {}
+  constructor(public readonly parent?: Namespace) { }
 
   /**
    * searches an attribute in a class scope
@@ -36,10 +36,16 @@ export class Namespace {
     } else {
       value = this.parent?.lookUp(key)
       if (value === undefined) {
-        if (key === 'document') {
+        if (key === 'document' || key === 'eval') {
           return undefined
         } else {
-          return new Constant(key, (window || global)[key as any])
+          try {
+            // @ts-ignore
+            return new Constant(key, window[key as any])
+          } catch {
+            // @ts-ignore
+            return new Constant(key, global[key as any])
+          }
         }
       } else {
         return value
