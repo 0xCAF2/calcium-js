@@ -1,4 +1,4 @@
-import { Command } from './'
+import type { Command } from './'
 import { Environment } from '../runtime/environment'
 
 /**
@@ -9,5 +9,5 @@ export class End implements Command {
    * do nothing
    * @param env
    */
-  execute(env: Environment) {}
+  execute(env: Environment) { }
 }

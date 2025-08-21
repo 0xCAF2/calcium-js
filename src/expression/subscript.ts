@@ -1,13 +1,13 @@
-import { Expression, Reference } from '.'
+import type { Expression, Reference } from '.'
 import { CannotAccessElement } from '../error'
 import { Environment } from '../runtime/environment'
-import { AnyType } from '../runtime/types'
+import type { AnyType } from '../runtime/types'
 
 export class Subscript {
   constructor(
     public readonly referredObj: Reference,
     public readonly index: Expression
-  ) {}
+  ) { }
 
   assign(rhs: AnyType, env: Environment) {
     const indexValue = env.evaluate(this.index)

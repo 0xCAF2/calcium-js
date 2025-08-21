@@ -1,4 +1,4 @@
-import { AnyType } from '../runtime/types'
+import type { AnyType } from '../runtime/types'
 import { BinaryOperator } from './binaryOperator'
 import { Call } from './call'
 import { New } from './new'

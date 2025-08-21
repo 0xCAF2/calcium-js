@@ -1,12 +1,12 @@
 import { NameNotFound } from '../error'
 import { Environment } from './environment'
-import { AnyType } from './types'
+import type { AnyType } from './types'
 
 /**
  * a reference to the value
  */
 export class Variable {
-  constructor(public readonly name: string, public ref: AnyType) {}
+  constructor(public readonly name: string, public ref: AnyType) { }
 
   /**
    * eg. `x = 7`

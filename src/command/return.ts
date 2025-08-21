@@ -1,5 +1,5 @@
-import { Command } from '.'
-import { Expression } from '../expression'
+import type { Command } from '.'
+import type { Expression } from '../expression'
 import { Kind } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 

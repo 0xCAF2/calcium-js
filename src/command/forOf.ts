@@ -1,5 +1,5 @@
-import { Command } from '.'
-import { Expression } from '../expression'
+import type { Command } from '.'
+import type { Expression } from '../expression'
 import { Block, Kind, Result } from '../runtime/block'
 import { Constant } from '../runtime/constant'
 import { Environment } from '../runtime/environment'
@@ -8,7 +8,7 @@ export class ForOf implements Command {
   constructor(
     public readonly variableName: string,
     public readonly iterable: Expression
-  ) {}
+  ) { }
 
   execute(env: Environment): void {
     const iterator = (env.evaluate(this.iterable) as any)[Symbol.iterator]()

@@ -1,4 +1,4 @@
-import { Expression } from '.'
+import type { Expression } from '.'
 import { Environment } from '../runtime/environment'
 import * as Kw from '../keywords'
 
@@ -6,7 +6,7 @@ export class UnaryOperator {
   constructor(
     public readonly operator: string,
     public readonly operand: Expression
-  ) {}
+  ) { }
 
   evaluate(env: Environment): Expression {
     const value = env.evaluate(this.operand)

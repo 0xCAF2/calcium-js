@@ -1,6 +1,6 @@
 export { Runtime } from './runtime/runtime'
 export { Status } from './runtime/status'
-export { Statement } from './runtime/statement'
+export type { Statement } from './runtime/statement'
 export * as Index from './indexes'
 export * as Keyword from './keywords'
 export * as Element from './runtime/element'
