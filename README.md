@@ -42,5 +42,5 @@ if i == 10:
 
 ## Is the Calcium an esoteric language or just a joke?
 
-No, I don't think so. [Here is one of the applications](https://calcium-editor.web.app/en/).
+No, I don't think so. [Here is one of the applications](https://caed.app/).
 It is suitable for environments that generate code programmatically.
