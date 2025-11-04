@@ -1,4 +1,4 @@
-import { Command } from '.'
+import type { Command } from '.'
 import { InvalidBreak } from '../error'
 import { Kind } from '../runtime/block'
 import { Environment } from '../runtime/environment'

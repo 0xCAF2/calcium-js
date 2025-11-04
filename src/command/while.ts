@@ -1,10 +1,10 @@
-import { Command } from '.'
-import { Expression } from '../expression'
+import type { Command } from '.'
+import type { Expression } from '../expression'
 import { Block, Kind, Result } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 
 export class While implements Command {
-  constructor(public readonly condition: Expression) {}
+  constructor(public readonly condition: Expression) { }
   execute(env: Environment): void {
     const block = new Block(
       Kind.While,

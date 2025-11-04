@@ -1,44 +1,36 @@
 {
   "name": "calcium-js",
   "version": "0.5.0",
-  "description": "A Calcium interpreter on JavaScript",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "A Calcium language interpreter on JavaScript.",
   "type": "module",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "node_modules/typescript/bin/tsc",
-    "prepublishOnly": "npm run build",
-    "test": "jest"
-  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/0xCAF2/calcium-js#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/0xCAF2/calcium-js.git"
   },
-  "keywords": [
-    "calcium",
-    "language",
-    "runtime",
-    "interpreter"
-  ],
   "author": "Roki Turner <roki@0xcaf2.dev>",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/0xCAF2/calcium-js/issues"
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   },
-  "homepage": "https://github.com/0xCAF2/calcium-js#readme",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && npm publish"
+  },
   "devDependencies": {
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-typescript": "^7.17.12",
-    "@types/jest": "^30.0.0",
-    "babel-jest": "^30.0.0",
-    "jest": "^30.0.0",
-    "jest-environment-jsdom": "^30.0.0",
-    "ts-jest": "^29.0.5",
-    "ts-node": "^10.8.1",
-    "typescript": "^5.0.2"
+    "@types/node": "^24.10.0",
+    "bumpp": "^10.3.1",
+    "tsdown": "^0.16.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.6"
   }
 }

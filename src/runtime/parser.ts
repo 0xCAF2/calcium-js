@@ -3,9 +3,9 @@ import * as Elem from './element'
 import * as Err from '../error'
 import * as Expr from '../expression'
 import * as Kw from '../keywords'
-import { Statement } from './statement'
+import type { Statement } from './statement'
 import * as Idx from '../indexes'
-import { AnyType } from './types'
+import type { AnyType } from './types'
 
 export class Parser {
   readonly table = new Map<Kw.Command, (stmt: Statement) => Cmd.Command>()

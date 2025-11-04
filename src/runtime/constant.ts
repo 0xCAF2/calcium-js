@@ -1,6 +1,6 @@
 import { CannotAssignToConst } from '../error'
 import { Environment } from '../runtime/environment'
-import { AnyType } from '../runtime/types'
+import type { AnyType } from '../runtime/types'
 import { Variable } from './variable'
 
 /**

@@ -1,6 +1,6 @@
-import { AnyType } from '../runtime/types'
+import type { AnyType } from '../runtime/types'
 import { NotCallable } from '../error'
-import { Reference } from './'
+import type { Reference } from './'
 import { Environment } from '../runtime/environment'
 import * as Sym from '../runtime/symbols'
 
@@ -12,7 +12,7 @@ export class Call {
   constructor(
     public readonly funcRef: Reference,
     public readonly args: AnyType[]
-  ) {}
+  ) { }
 
   evaluate(env: Environment): AnyType {
     const evaluatedArgs = this.args.map((a) => env.evaluate(a))

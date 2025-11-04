@@ -4,9 +4,9 @@ import { CallingCmd } from './callingCmd'
 import * as Err from '../error'
 import * as Idx from '../indexes'
 import { Namespace } from './namespace'
-import { Statement } from './statement'
+import type { Statement } from './statement'
 import * as Expr from '../expression'
-import { AnyType } from './types'
+import type { AnyType } from './types'
 
 export type OutputFunction = (desc: string) => void
 

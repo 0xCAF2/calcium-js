@@ -1,4 +1,4 @@
-import { Command } from '.'
+import type { Command } from '.'
 import { Block, Kind, Result } from '../runtime/block'
 import { Environment } from '../runtime/environment'
 

@@ -5,7 +5,7 @@ import { Environment } from './environment'
 import * as Idx from '../indexes'
 import * as Kw from '../keywords'
 import { Parser } from './parser'
-import { Statement } from './statement'
+import type { Statement } from './statement'
 import { Status } from './status'
 
 export class Runtime {

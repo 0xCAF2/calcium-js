@@ -1,4 +1,4 @@
-import { Expression } from '../expression'
+import type { Expression } from '../expression'
 import { Environment } from '../runtime/environment'
 import { Conditional } from './conditional'
 

@@ -1,13 +1,13 @@
-import { Reference } from '.'
-import { NameNotFound, PropertyNotExist } from '../error'
+import type { Reference } from '.'
+import { PropertyNotExist } from '../error'
 import { Environment } from '../runtime/environment'
-import { AnyType } from '../runtime/types'
+import type { AnyType } from '../runtime/types'
 
 export class Property {
   constructor(
     public readonly referredObj: Reference,
     public readonly propertyName: string
-  ) {}
+  ) { }
 
   assign(value: AnyType, env: Environment) {
     let target = env.evaluate(this.referredObj) as any
