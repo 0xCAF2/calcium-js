@@ -1,12 +1,12 @@
-import { Address } from './address'
-import { Block, Result } from './block'
-import { CallingCmd } from './callingCmd'
-import * as Err from '../error'
-import * as Idx from '../indexes'
-import { Namespace } from './namespace'
-import type { Statement } from './statement'
-import * as Expr from '../expression'
-import type { AnyType } from './types'
+import { Address } from "./address"
+import { Block, Result } from "./block"
+import { CallingCmd } from "./callingCmd"
+import * as Err from "../error"
+import * as Idx from "../indexes"
+import { Namespace } from "./namespace"
+import type { Statement } from "./statement"
+import * as Expr from "../expression"
+import type { AnyType } from "./types"
 
 export type OutputFunction = (desc: string) => void
 
@@ -32,8 +32,7 @@ export class Environment {
       value instanceof Expr.Subscript ||
       value instanceof Expr.Call ||
       value instanceof Expr.BinaryOperator ||
-      value instanceof Expr.UnaryOperator ||
-      value instanceof Expr.New
+      value instanceof Expr.UnaryOperator
     ) {
       return value.evaluate(this)
     } else {

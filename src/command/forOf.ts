@@ -1,14 +1,13 @@
-import type { Command } from '.'
-import type { Expression } from '../expression'
-import { Block, Kind, Result } from '../runtime/block'
-import { Constant } from '../runtime/constant'
-import { Environment } from '../runtime/environment'
+import type { Command } from "."
+import type { Expression } from "../expression"
+import { Block, Kind, Result } from "../runtime/block"
+import { Environment } from "../runtime/environment"
 
 export class ForOf implements Command {
   constructor(
     public readonly variableName: string,
     public readonly iterable: Expression
-  ) { }
+  ) {}
 
   execute(env: Environment): void {
     const iterator = (env.evaluate(this.iterable) as any)[Symbol.iterator]()
@@ -20,10 +19,7 @@ export class ForOf implements Command {
         if (nextObj.done) {
           return false
         }
-        env.context.register(
-          this.variableName,
-          new Constant(this.variableName, nextObj.value)
-        )
+        env.context.register(this.variableName, nextObj.value)
         return true
       },
       (env) => {
