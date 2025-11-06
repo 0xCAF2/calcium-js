@@ -1,11 +1,5 @@
 export class CannotAccessElement extends Error {}
 
-export class CannotAssignToConst extends Error {
-  constructor(public readonly name: string) {
-    super(`${name} is declared as const.`)
-  }
-}
-
 export class CommandNotDefined extends Error {
   constructor(public readonly keyword: string) {
     super(`${keyword} not defined.`)
@@ -13,7 +7,7 @@ export class CommandNotDefined extends Error {
 }
 
 /**
- * Used for "GOTO" like control flow when the function is called
+ * Used as "GOTO" like control flow when the function is called
  */
 export class FunctionCalled extends Error {}
 
