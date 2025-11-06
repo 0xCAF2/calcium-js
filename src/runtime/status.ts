@@ -1,10 +1,9 @@
 /**
- * the result of `Runtime`'s methods
+ * the result of `Runtime`'s execution state
  */
 export enum Status {
-  AtBreakpoint,
   Paused,
-  Running,
+  Executed,
   Terminated,
   UnhandledError,
 }
