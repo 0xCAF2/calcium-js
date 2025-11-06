@@ -54,9 +54,9 @@ export enum UnaryOperator {
 }
 
 export enum Expression {
-  Array = "array",
+  ArrayLiteral = "array",
   Call = "call",
   Num = "num",
-  Object = "object",
+  ObjectLiteral = "object",
   This = "this",
 }

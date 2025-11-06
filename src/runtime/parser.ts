@@ -13,7 +13,7 @@ export class Parser {
     this.table.set(Kw.Command.Assignment, (stmt) => {
       const lhs = this.readRef(stmt[Idx.Assignment.Lhs] as Elem.Reference)
       const rhs = this.readExpr(stmt[Idx.Assignment.Rhs])
-      return new Cmd.Assign(lhs, rhs)
+      return new Cmd.Assignment(lhs, rhs)
     })
     this.table.set(Kw.Command.Break, (stmt) => {
       return new Cmd.Break()

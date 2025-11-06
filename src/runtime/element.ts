@@ -8,7 +8,7 @@ export type Primitive = string | boolean | null
  */
 export type ArrayLiteral = ["array", Any[]]
 
-type KeyValuePair = [string, Any]
+export type KeyValuePair = [string, Any]
 /**
  * an object type in JSON
  */
@@ -81,6 +81,7 @@ export type Any =
   | Num
   | Call
   | Primitive
+  | Primitive[]
   | ArrayLiteral
   | ObjectLiteral
   | Reference

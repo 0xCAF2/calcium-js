@@ -4,7 +4,7 @@ export interface Command {
   execute(env: Environment): void
 }
 
-export { Assignment as Assign } from "./assignment"
+export { Assignment } from "./assignment"
 export { Break } from "./break"
 export { Comment } from "./comment"
 export { Continue } from "./continue"
