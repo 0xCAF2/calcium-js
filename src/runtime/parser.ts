@@ -1,19 +1,18 @@
-import * as Cmd from '../command'
-import * as Elem from './element'
-import * as Err from '../error'
-import * as Expr from '../expression'
-import * as Kw from '../keywords'
-import type { Statement } from './statement'
-import * as Idx from '../indexes'
-import type { AnyType } from './types'
+import * as Cmd from "../command"
+import * as Elem from "./element"
+import * as Err from "../error"
+import * as Expr from "../expression"
+import * as Kw from "../keywords"
+import type { Statement } from "./statement"
+import * as Idx from "../indexes"
 
 export class Parser {
   readonly table = new Map<Kw.Command, (stmt: Statement) => Cmd.Command>()
 
   constructor() {
-    this.table.set(Kw.Command.Assign, (stmt) => {
-      const lhs = this.readRef(stmt[Idx.Assign.Lhs] as Elem.Reference)
-      const rhs = this.readExpr(stmt[Idx.Assign.Rhs])
+    this.table.set(Kw.Command.Assignment, (stmt) => {
+      const lhs = this.readRef(stmt[Idx.Assignment.Lhs] as Elem.Reference)
+      const rhs = this.readExpr(stmt[Idx.Assignment.Rhs])
       return new Cmd.Assign(lhs, rhs)
     })
     this.table.set(Kw.Command.Break, (stmt) => {
@@ -24,11 +23,6 @@ export class Parser {
     })
     this.table.set(Kw.Command.Continue, (stmt) => {
       return new Cmd.Continue()
-    })
-    this.table.set(Kw.Command.Const, (stmt) => {
-      const name = stmt[Idx.Assign.Lhs] as string
-      const value = this.readExpr(stmt[Idx.Assign.Rhs])
-      return new Cmd.Const(name, value)
     })
     this.table.set(Kw.Command.Else, (stmt) => {
       return new Cmd.Else()
@@ -61,15 +55,6 @@ export class Parser {
     this.table.set(Kw.Command.Ifs, (stmt) => {
       return new Cmd.Ifs()
     })
-    this.table.set(Kw.Command.Let, (stmt) => {
-      const name = stmt[Idx.Assign.Lhs] as string
-      if (stmt.length <= Idx.Assign.Rhs) {
-        return new Cmd.Let(name)
-      } else {
-        const value = this.readExpr(stmt[Idx.Assign.Rhs])
-        return new Cmd.Let(name, value)
-      }
-    })
     this.table.set(Kw.Command.Return, (stmt) => {
       if (stmt.length <= Idx.Return.Expr) {
         return new Cmd.Return()
@@ -92,7 +77,10 @@ export class Parser {
     return args
   }
 
-  readBinOp(operator: string, expr: Elem.Any[]): Expr.BinaryOperator {
+  readBinOp(
+    operator: string,
+    expr: [Elem.BinaryOperator, Elem.Any, Elem.Any]
+  ): Expr.BinaryOperator {
     const left = this.readExpr(expr[Idx.BinaryOperator.Left])
     const right = this.readExpr(expr[Idx.BinaryOperator.Right])
     return new Expr.BinaryOperator(operator, left, right)
@@ -100,35 +88,35 @@ export class Parser {
 
   readExpr(elem: Elem.Any): Expr.Expression {
     if (Array.isArray(elem)) {
-      if (Array.isArray(elem[0])) {
-        // an array literal
-        return elem[0] as AnyType[]
-      } else {
-        const kw = elem[Idx.Expression.Keyword] as string
-        if (
-          kw === Kw.Reference.Variable ||
-          kw === Kw.Reference.Property ||
-          kw === Kw.Reference.Subscript
-        ) {
-          return this.readRef(elem as Elem.Reference)
-        } else if (kw === Kw.Expression.Call) {
-          const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
-          const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
-          return new Expr.Call(ref, args)
-        } else if (kw === Kw.Expression.New) {
-          const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
-          const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
-          return new Expr.New(klass, args)
-        } else if (elem.length === 3) {
-          return this.readBinOp(kw, elem)
-        } else if (elem.length === 2) {
-          return this.readUnOp(kw, elem)
+      const kw = elem[Idx.Expression.Keyword] as string
+      if (kw === Kw.Expression.Num) {
+        const value = elem[Idx.Num.Value] as unknown as string
+        try {
+          return parseInt(value)
+        } catch {
+          return parseFloat(value)
         }
+      } else if (
+        kw === Kw.Reference.Variable ||
+        kw === Kw.Reference.Property ||
+        kw === Kw.Reference.Subscript
+      ) {
+        return this.readRef(elem as Elem.Reference)
+      } else if (kw === Kw.Expression.Call) {
+        const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
+        const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
+        return new Expr.Call(ref, args)
+      } else if (kw in Kw.BinaryOperator) {
+        return this.readBinOp(
+          kw,
+          elem as [Elem.BinaryOperator, Elem.Any, Elem.Any]
+        )
+      } else if (kw in Kw.UnaryOperator) {
+        return this.readUnOp(kw, elem as [Elem.UnaryOperator, Elem.Any])
       }
     } else {
       return elem
     }
-    throw new Error('Not implemented')
   }
 
   readRef(elem: Elem.Reference): Expr.Reference {
@@ -146,7 +134,7 @@ export class Parser {
       const index = this.readExpr(elem[Idx.Subscript.IndexExpr] as Elem.Any)
       return new Expr.Subscript(referredObj, index)
     } else {
-      throw new Error('Not implemented')
+      throw new Error("Not implemented")
     }
   }
 
@@ -159,7 +147,10 @@ export class Parser {
     return cmd
   }
 
-  readUnOp(operator: string, elem: Elem.Any[]): Expr.Expression {
+  readUnOp(
+    operator: string,
+    elem: [Elem.UnaryOperator, Elem.Any]
+  ): Expr.Expression {
     return new Expr.UnaryOperator(
       operator,
       this.readExpr(elem[Idx.UnaryOperator.Operand])

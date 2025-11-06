@@ -9,11 +9,6 @@ import type { Statement } from './statement'
 import { Status } from './status'
 
 export class Runtime {
-  /**
-   * used for the step execution of each line.
-   */
-  breakpoints = new Set<number>()
-
   env: Environment
 
   /**
@@ -61,7 +56,7 @@ export class Runtime {
   run(): Status {
     while (true) {
       const status = this.step()
-      if (status === Status.Running) {
+      if (status === Status.Executed) {
         continue
       } else {
         return status
@@ -115,11 +110,7 @@ export class Runtime {
       kw = nextLine[Idx.Statement.Keyword]
     }
 
-    if (this.breakpoints.has(this.env.address.line)) {
-      return Status.AtBreakpoint
-    } else {
-      return Status.Running
-    }
+    return Status.Executed
   }
 
   get currentLine(): Statement {

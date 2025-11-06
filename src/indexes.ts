@@ -10,7 +10,7 @@ export enum Statement {
 
 // commands
 
-export enum Assign {
+export enum Assignment {
   Lhs = 3,
   Rhs = 4,
 }
@@ -49,6 +49,11 @@ export enum Function {
   Parameters = 4,
 }
 
+export enum New {
+  Class = 3,
+  Args = 4,
+}
+
 export enum Return {
   Expr = 3,
 }
@@ -57,6 +62,10 @@ export enum Return {
 
 export enum Expression {
   Keyword = 0,
+}
+
+export enum ArrayLiteral {
+  Elements = 1,
 }
 
 export enum BinaryOperator {
@@ -69,9 +78,12 @@ export enum Call {
   Args = 2,
 }
 
-export enum New {
-  Class = 1,
-  Args = 2,
+export enum Num {
+  Value = 1,
+}
+
+export enum ObjectLiteral {
+  Properties = 1,
 }
 
 export enum Property {

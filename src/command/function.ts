@@ -1,20 +1,18 @@
-import type { Command } from '.'
-import { FunctionCalled, InvalidEnd } from '../error'
-import { Block, Kind, Result } from '../runtime/block'
-import { Constant } from '../runtime/constant'
-import { Environment } from '../runtime/environment'
-import { Namespace } from '../runtime/namespace'
-import type { AnyType } from '../runtime/types'
-import * as Sym from '../runtime/symbols'
-import { Parser } from '../runtime/parser'
-import { End } from './end'
-import { Variable } from '../runtime/variable'
+import type { Command } from "."
+import { FunctionCalled, InvalidEnd } from "../error"
+import { Block, Kind, Result } from "../runtime/block"
+import { Environment } from "../runtime/environment"
+import { Namespace } from "../runtime/namespace"
+import type { AnyType } from "../runtime/types"
+import * as Sym from "../runtime/symbols"
+import { Parser } from "../runtime/parser"
+import { End } from "./end"
 
 export class Function implements Command {
   constructor(
     public readonly funcName: string,
     public readonly params: string[]
-  ) { }
+  ) {}
 
   execute(env: Environment): void {
     const definedAddr = env.address.clone()
@@ -26,7 +24,7 @@ export class Function implements Command {
     function _f(...args: AnyType[]) {
       const callerAddr = env.address.clone()
       const local = new Namespace(parentScope)
-      params.forEach((p, i) => local.register(p, new Constant(p, args[i])))
+      params.forEach((p, i) => local.register(p, args[i]))
       const calleeAddr = definedAddr.clone()
       calleeAddr.calls = callerAddr.calls + 1
 
@@ -85,6 +83,6 @@ export class Function implements Command {
       return (...args: AnyType[]) => _f(...args)
     })
 
-    env.context.register(this.funcName, new Variable(this.funcName, _f))
+    env.context.register(this.funcName, _f)
   }
 }

@@ -1,13 +1,14 @@
 import { expect, test } from "vitest"
 import { Runtime, Status } from "../src"
 
-test('Say "Hello, World."', () => {
+test("Assign and reference variables", () => {
   const code = [
+    [1, [], "=", ["var", "x"], ["num", "42"]],
     [
       1,
       [],
       "expr",
-      ["call", ["prop", ["var", "console"], "log"], ["Hello, World."]],
+      ["call", ["prop", ["var", "console"], "log"], [["var", "x"]]],
     ],
     [1, [], "end"],
   ]
