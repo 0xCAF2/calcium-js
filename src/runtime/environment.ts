@@ -31,6 +31,7 @@ export class Environment {
       value instanceof Expr.Property ||
       value instanceof Expr.Subscript ||
       value instanceof Expr.Call ||
+      value instanceof Expr.New ||
       value instanceof Expr.BinaryOperator ||
       value instanceof Expr.UnaryOperator
     ) {

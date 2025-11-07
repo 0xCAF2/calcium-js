@@ -76,7 +76,13 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
     const args = n.arguments.map((a) => parseExpr(a))
     return [calcium.Keyword.Expression.Call, ref, args]
   } else if (ts.isNewExpression(n)) {
-    throw new Error("new statement not implemented")
+    const klass = parseExpr(n.expression) as calcium.Element.Reference
+    if (n.arguments !== undefined) {
+      const args = n.arguments.map((a) => parseExpr(a))
+      return [calcium.Keyword.Expression.New, klass, args]
+    } else {
+      return [calcium.Keyword.Expression.New, klass, []]
+    }
   } else if (ts.isElementAccessExpression(n)) {
     // eg. obj[prop], which is referred as a subscript in Calcium
     const obj = parseExpr(n.expression) as calcium.Element.Reference

@@ -2,8 +2,8 @@ import { expect, test } from "vitest"
 import { Runtime, Status } from "../src"
 import { convertJsToCalcium } from "./jsFile"
 
-test('Say "Hello, World."', () => {
-  const code = convertJsToCalcium("hello.js")
+test("Revived new operator", () => {
+  const code = convertJsToCalcium("new.js")
   const runtime = new Runtime(code)
   expect(runtime.run()).toBe(Status.Terminated)
 })

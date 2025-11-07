@@ -53,6 +53,14 @@ export type UnaryOperator = "~" | "-_" | "!"
  */
 export type Call = ["call", Reference, Any[]]
 
+/**
+ * a class instantiation
+ */
+export type New = ["new", Reference, Any[]]
+
+/**
+ * a number literal
+ */
 export type Num = ["num", string]
 /**
  * used for the key of a subscript
@@ -80,6 +88,7 @@ export type Variable = ["var", string]
 export type Any =
   | Num
   | Call
+  | New
   | Primitive
   | Primitive[]
   | ArrayLiteral

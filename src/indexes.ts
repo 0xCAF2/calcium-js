@@ -27,18 +27,6 @@ export enum ExprStmt {
   Expr = 3,
 }
 
-export enum For {
-  VariableName = 3,
-  InitialValue = 4,
-  Condition = 5,
-  Stepper = 6,
-}
-
-export enum ForIn {
-  VariableName = 3,
-  Iterable = 4,
-}
-
 export enum ForOf {
   VariableName = 3,
   Iterable = 4,
@@ -47,11 +35,6 @@ export enum ForOf {
 export enum Function {
   Name = 3,
   Parameters = 4,
-}
-
-export enum New {
-  Class = 3,
-  Args = 4,
 }
 
 export enum Return {
@@ -75,6 +58,11 @@ export enum BinaryOperator {
 
 export enum Call {
   FuncRef = 1,
+  Args = 2,
+}
+
+export enum New {
+  Class = 1,
   Args = 2,
 }
 
