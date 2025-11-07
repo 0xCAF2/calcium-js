@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 import { Runtime, Status } from "../src"
-import { convertJsToCalcium } from "./jsFile"
+import { convertJsToCalcium } from "./jsCode/fileReader"
 
 test('Say "Hello, World."', () => {
   const code = convertJsToCalcium("hello.js")

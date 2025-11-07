@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 import { Runtime, Status } from "../src"
-import { convertJsToCalcium } from "./jsFile"
+import { convertJsToCalcium } from "./jsCode/fileReader"
 
 test("Revived new operator", () => {
   const code = convertJsToCalcium("new.js")
