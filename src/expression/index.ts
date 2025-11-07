@@ -1,6 +1,7 @@
 import type { AnyType } from "../runtime/types"
 import { BinaryOperator } from "./binaryOperator"
 import { Call } from "./call"
+import { New } from "./new"
 import { Property } from "./property"
 import { Subscript } from "./subscript"
 import { UnaryOperator } from "./unaryOperator"
@@ -11,11 +12,13 @@ export type Expression =
   | AnyType
   | BinaryOperator
   | Call
+  | New
   | Reference
   | UnaryOperator
 
 export { BinaryOperator }
 export { Call }
+export { New }
 export { Property }
 export { Subscript }
 export { UnaryOperator }

@@ -13,7 +13,7 @@ export class Parser {
     this.table.set(Kw.Command.Assignment, (stmt) => {
       const lhs = this.readRef(stmt[Idx.Assignment.Lhs] as Elem.Reference)
       const rhs = this.readExpr(stmt[Idx.Assignment.Rhs])
-      return new Cmd.Assign(lhs, rhs)
+      return new Cmd.Assignment(lhs, rhs)
     })
     this.table.set(Kw.Command.Break, (stmt) => {
       return new Cmd.Break()
@@ -106,6 +106,10 @@ export class Parser {
         const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
         const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
         return new Expr.Call(ref, args)
+      } else if (kw === Kw.Expression.New) {
+        const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
+        const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
+        return new Expr.New(klass, args)
       } else if (kw in Kw.BinaryOperator) {
         return this.readBinOp(
           kw,

@@ -36,7 +36,6 @@ export enum Command {
   Function = "function",
   If = "if",
   Ifs = "ifs",
-  New = "new",
   Return = "return",
   While = "while",
 }
@@ -54,9 +53,10 @@ export enum UnaryOperator {
 }
 
 export enum Expression {
-  Array = "array",
+  ArrayLiteral = "array",
   Call = "call",
+  New = "new",
   Num = "num",
-  Object = "object",
+  ObjectLiteral = "object",
   This = "this",
 }

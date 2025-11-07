@@ -1,5 +1,5 @@
-import * as ts from 'typescript'
-import * as calcium from '..'
+import ts from "typescript"
+import * as calcium from ".."
 
 /**
  * parses a node and generate an expression element for Calcium.
@@ -15,16 +15,10 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
     // the last element of property names
     const propertyName = n.name.text
     // the object including other properties
-    const obj = parseExpr(n.expression)
+    const obj = parseExpr(n.expression) as calcium.Element.Reference
     return [calcium.Keyword.Reference.Property, obj, propertyName]
   } else if (ts.isNumericLiteral(n)) {
-    if (n.text.includes('.')) {
-      // eg. 3.14
-      return parseFloat(n.text)
-    } else {
-      // eg. 42
-      return parseInt(n.text)
-    }
+    return [calcium.Keyword.Expression.Num, n.text]
   } else if (ts.isStringLiteral(n)) {
     // eg. 'Hello, World.'
     return n.text
@@ -36,7 +30,15 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
     return true
   } else if (ts.isBinaryExpression(n)) {
     // eg. 1 + 2
-    return [n.operatorToken.getText(), parseExpr(n.left), parseExpr(n.right)]
+    return [
+      n.operatorToken.getText(),
+      parseExpr(n.left),
+      parseExpr(n.right),
+    ] as [
+      calcium.Keyword.BinaryOperator,
+      calcium.Element.Any,
+      calcium.Element.Any
+    ]
   } else if (ts.isPrefixUnaryExpression(n)) {
     switch (n.operator) {
       case ts.SyntaxKind.ExclamationToken:
@@ -46,20 +48,23 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
         // eg. -num
         return [calcium.Keyword.UnaryOperator.Minus, parseExpr(n.operand)]
       default:
-        throw new Error('unary operator not implemented')
+        throw new Error("unary operator not implemented")
     }
   } else if (ts.isArrayLiteralExpression(n)) {
     // An array literal in Calcium is nested. eg. [[1, 2, 3]]
-    return [n.elements.map((e) => parseExpr(e))]
+    return [
+      calcium.Keyword.Expression.ArrayLiteral,
+      n.elements.map((e) => parseExpr(e)),
+    ]
   } else if (ts.isExpressionStatement(n)) {
     // an expression statement of calling a function
     const expr = n.expression
     if (ts.isCallExpression(expr)) {
-      const ref = parseExpr(expr.expression)
+      const ref = parseExpr(expr.expression) as calcium.Element.Reference
       const args = expr.arguments.map((n) => parseExpr(n))
       return [calcium.Keyword.Expression.Call, ref, args]
     } else {
-      throw new Error('expression not supported')
+      throw new Error("expression not supported")
     }
   } else if (ts.isParenthesizedExpression(n)) {
     // Calcium does not have parens.
@@ -67,29 +72,43 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
     return parseExpr(n.expression)
   } else if (ts.isCallExpression(n)) {
     // an expression which has the invocation of a function
-    const ref = parseExpr(n.expression)
+    const ref = parseExpr(n.expression) as calcium.Element.Reference
     const args = n.arguments.map((a) => parseExpr(a))
     return [calcium.Keyword.Expression.Call, ref, args]
   } else if (ts.isNewExpression(n)) {
-    // eg. new Array()
-    const klass = parseExpr(n.expression)
+    const klass = parseExpr(n.expression) as calcium.Element.Reference
     if (n.arguments !== undefined) {
       const args = n.arguments.map((a) => parseExpr(a))
       return [calcium.Keyword.Expression.New, klass, args]
     } else {
-      return [calcium.Keyword.Expression.New, klass]
+      return [calcium.Keyword.Expression.New, klass, []]
     }
   } else if (ts.isElementAccessExpression(n)) {
     // eg. obj[prop], which is referred as a subscript in Calcium
-    const obj = parseExpr(n.expression)
-    const index = parseExpr(n.argumentExpression)
+    const obj = parseExpr(n.expression) as calcium.Element.Reference
+    const index = parseExpr(n.argumentExpression) as calcium.Element.IndexOrKey
     return [calcium.Keyword.Reference.Subscript, obj, index]
   } else if (ts.isObjectLiteralExpression(n)) {
-    // currently supported an empty object literal only
-    return {}
+    // An object literal in Calcium is nested. eg. [[key1, val1], [key2, val2]]
+    const properties: calcium.Element.KeyValuePair[] = []
+    n.properties.forEach((p) => {
+      if (ts.isPropertyAssignment(p)) {
+        const key = (() => {
+          if (ts.isIdentifier(p.name) || ts.isStringLiteral(p.name)) {
+            return p.name.text
+          } else {
+            throw new Error("object literal key type not supported")
+          }
+        })()
+        const value = parseExpr(p.initializer)
+        properties.push([key, value])
+      } else {
+        throw new Error("object literal property type not supported")
+      }
+    })
   }
   console.error(n)
-  throw new Error('not implemented')
+  throw new Error("not implemented")
 }
 
 /**
@@ -111,9 +130,6 @@ export function convert(sourceCode: string): string {
       // an identifier of the variable or constant
       const name = stmt.declarationList.declarations[0].name.getText()
 
-      // confirm that this statement has a const keyword
-      const isConst = (stmt.declarationList.flags & ts.NodeFlags.Const) !== 0
-
       // the right hand side value
       let rhs: calcium.Element.Any = null
 
@@ -123,13 +139,14 @@ export function convert(sourceCode: string): string {
         return n // needs to return Node type?
       })
 
-      // the keyword of this statement
-      let keyword: calcium.Keyword.Command = isConst
-        ? calcium.Keyword.Command.Const
-        : calcium.Keyword.Command.Let
-
       // push the result of this visit
-      code.push([indent, [], keyword, name, rhs])
+      code.push([
+        indent,
+        [],
+        calcium.Keyword.Command.Assignment,
+        [calcium.Keyword.Reference.Variable, name],
+        rhs,
+      ])
     } else if (ts.isExpressionStatement(stmt)) {
       // an assignment
       if (
@@ -144,7 +161,7 @@ export function convert(sourceCode: string): string {
         // Although assigned later, initial value is required
         let lhs: calcium.Element.Reference = [
           calcium.Keyword.Reference.Variable,
-          'x',
+          "x",
         ]
         let rhs: calcium.Element.Any = null
         ts.visitNode(
@@ -158,7 +175,7 @@ export function convert(sourceCode: string): string {
             return n // need a return value
           }
         )
-        code.push([indent, [], calcium.Keyword.Command.Assign, lhs, rhs])
+        code.push([indent, [], calcium.Keyword.Command.Assignment, lhs, rhs])
       } else {
         // an expression statement
         code.push([
@@ -302,7 +319,7 @@ export function convert(sourceCode: string): string {
 
   // parse the source code and start to visit nodes
   for (const stmt of ts.createSourceFile(
-    'converted.cajs',
+    "converted.cajs",
     sourceCode,
     ts.ScriptTarget.ES2015,
     true
@@ -315,5 +332,5 @@ export function convert(sourceCode: string): string {
 
   // format code into readable lines
   const lines = code.map((a) => JSON.stringify(a))
-  return `[\n${lines.reduce((c, l) => c + ',\n' + l)}\n]`
+  return `[\n${lines.reduce((c, l) => c + ",\n" + l)}\n]`
 }
