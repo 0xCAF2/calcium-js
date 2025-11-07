@@ -1,17 +1,9 @@
 import { expect, test } from "vitest"
 import { Runtime, Status } from "../src"
+import { convertJsToCalcium } from "./openJsFile"
 
 test("Assign and reference variables", () => {
-  const code = [
-    [1, [], "=", ["var", "x"], ["num", "42"]],
-    [
-      1,
-      [],
-      "expr",
-      ["call", ["prop", ["var", "console"], "log"], [["var", "x"]]],
-    ],
-    [1, [], "end"],
-  ]
-  const runtime = new Runtime(JSON.stringify(code))
+  const code = convertJsToCalcium("assign.js")
+  const runtime = new Runtime(code)
   expect(runtime.run()).toBe(Status.Terminated)
 })
