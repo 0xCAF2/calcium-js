@@ -96,6 +96,16 @@ export class Parser {
         } catch {
           return parseFloat(value)
         }
+      } else if (kw === Kw.Expression.ArrayLiteral) {
+        const items = elem[Idx.ArrayLiteral.Elements] as Elem.Any[]
+        return items.map((item) => this.readExpr(item))
+      } else if (kw === Kw.Expression.ObjectLiteral) {
+        const props = elem[Idx.ObjectLiteral.Properties] as Elem.KeyValuePair[]
+        const obj: { [key: string]: Expr.Expression } = {}
+        for (const [key, value] of props) {
+          obj[key] = this.readExpr(value)
+        }
+        return obj
       } else if (
         kw === Kw.Reference.Variable ||
         kw === Kw.Reference.Property ||
@@ -110,12 +120,12 @@ export class Parser {
         const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
         const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
         return new Expr.New(klass, args)
-      } else if (kw in Kw.BinaryOperator) {
+      } else if (Object.values<string>(Kw.BinaryOperator).includes(kw)) {
         return this.readBinOp(
           kw,
           elem as [Elem.BinaryOperator, Elem.Any, Elem.Any]
         )
-      } else if (kw in Kw.UnaryOperator) {
+      } else if (Object.values<string>(Kw.UnaryOperator).includes(kw)) {
         return this.readUnOp(kw, elem as [Elem.UnaryOperator, Elem.Any])
       }
     } else {

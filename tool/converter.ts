@@ -51,11 +51,30 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
         throw new Error("unary operator not implemented")
     }
   } else if (ts.isArrayLiteralExpression(n)) {
-    // An array literal in Calcium is nested. eg. [[1, 2, 3]]
+    // An array literal in Calcium is nested. eg. ["array", [1, 2, 3]]
     return [
       calcium.Keyword.Expression.ArrayLiteral,
       n.elements.map((e) => parseExpr(e)),
     ]
+  } else if (ts.isObjectLiteralExpression(n)) {
+    // An object literal in Calcium is nested. eg. ["object", [[key1, val1], [key2, val2]]]
+    const properties: calcium.Element.KeyValuePair[] = []
+    n.properties.forEach((p) => {
+      if (ts.isPropertyAssignment(p)) {
+        const key = (() => {
+          if (ts.isIdentifier(p.name) || ts.isStringLiteral(p.name)) {
+            return p.name.text
+          } else {
+            throw new Error("object literal key type not supported")
+          }
+        })()
+        const value = parseExpr(p.initializer)
+        properties.push([key, value])
+      } else {
+        throw new Error("object literal property type not supported")
+      }
+    })
+    return [calcium.Keyword.Expression.ObjectLiteral, properties]
   } else if (ts.isExpressionStatement(n)) {
     // an expression statement of calling a function
     const expr = n.expression
