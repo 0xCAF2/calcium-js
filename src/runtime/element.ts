@@ -46,7 +46,15 @@ export type BinaryOperator =
 /**
  * a unary operator
  */
-export type UnaryOperator = "~" | "-_" | "!"
+export type UnaryOperator =
+  | "~"
+  | "-_"
+  | "!"
+  | "typeof"
+  | "++_"
+  | "--_"
+  | "_++"
+  | "_--"
 
 /**
  * a function call

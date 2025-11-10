@@ -6,48 +6,31 @@ import type { Statement } from "./statement"
 import * as Idx from "../core/indexes"
 import { CommandNotDefined } from "../error"
 
-export type CommandTable<Any = Elem.Any, C = Cmd.Command, K = Kw.Command> = Map<
-  K,
-  (stmt: Statement<Any>, exprParser: ExpressionParser) => C
+export type CommandTable = Map<
+  string,
+  (stmt: Statement, exprParser: ExpressionParser) => Cmd.Command
 >
 
-export class StatementParser<Any = Elem.Any, C = Cmd.Command, K = Kw.Command> {
+export class StatementParser {
   exprParser: ExpressionParser
-  table: CommandTable<Any, C, K>
+  table: CommandTable
 
-  constructor(table: CommandTable<Any, C, K>, exprParser: ExpressionParser) {
+  constructor(table: CommandTable, exprParser: ExpressionParser) {
     this.table = table
     this.exprParser = exprParser
   }
 
-  readStmt(stmt: Statement<Any>): C {
-    const kw = stmt[Idx.Statement.Keyword] as K
+  readStmt(stmt: Statement): Cmd.Command {
+    const kw = stmt[Idx.Statement.Keyword]
     const cmd = this.table.get(kw)?.(stmt, this.exprParser)
     if (cmd === undefined) {
-      throw new CommandNotDefined(kw as string)
+      throw new CommandNotDefined(kw)
     }
     return cmd
   }
 }
 
-export interface ExpressionParser<
-  Any = Elem.Any,
-  BinOp = Elem.BinaryOperator,
-  UnOp = Elem.UnaryOperator,
-  Ref = Elem.Reference,
-  E = Expr.Expression,
-  B = Expr.BinaryOperator,
-  U = Expr.UnaryOperator,
-  R = Expr.Reference
-> {
-  readArgs(elems: Any[]): E[]
-  readBinOp(operator: string, expr: [BinOp, Any, Any]): B
-  readExpr(elem: Any): E
-  readRef(elem: Ref): R
-  readUnOp(operator: string, elem: [UnOp, Any]): U
-}
-
-export class ExpressionParserImpl implements ExpressionParser {
+export class ExpressionParser {
   readArgs(elems: Elem.Any[]): Expr.Expression[] {
     const args: Expr.Expression[] = []
     for (const arg of elems) {
@@ -66,12 +49,16 @@ export class ExpressionParserImpl implements ExpressionParser {
   }
 
   readExpr(elem: Elem.Any): Expr.Expression {
-    if (!Array.isArray(elem)) {
+    if (
+      typeof elem === "string" ||
+      typeof elem === "boolean" ||
+      elem === null
+    ) {
       return elem
     }
     const kw = elem[Idx.Expression.Keyword] as string
     if (kw === Kw.Expression.Num) {
-      const value = elem[Idx.Num.Value] as unknown as string
+      const value = elem[Idx.Num.Value] as string
       try {
         return parseInt(value)
       } catch {

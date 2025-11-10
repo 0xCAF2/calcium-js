@@ -8,7 +8,7 @@ import { StatementParser } from "./parser"
 import type { Statement } from "./statement"
 import { Status } from "./status"
 import { commandTable } from "../core/table"
-import { ExpressionParserImpl } from "./parser"
+import { ExpressionParser } from "./parser"
 
 export class Runtime {
   env: Environment
@@ -24,7 +24,7 @@ export class Runtime {
    */
   constructor(
     code: string | Statement[],
-    parser = new StatementParser(commandTable, new ExpressionParserImpl())
+    parser = new StatementParser(commandTable, new ExpressionParser())
   ) {
     let codeObj: Statement[]
     if (typeof code === "string") {

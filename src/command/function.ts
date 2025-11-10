@@ -10,7 +10,7 @@ import { commandTable } from "../core/table"
 import * as Index from "../core/indexes"
 import * as Keyword from "../core/keywords"
 
-export class Function implements Command {
+export class UserDefinedFunction implements Command {
   constructor(
     public readonly funcName: string,
     public readonly params: string[]
@@ -91,5 +91,5 @@ export class Function implements Command {
 commandTable.set(Keyword.Command.Function, (stmt) => {
   const funcName = stmt[Index.Function.Name] as string
   const params = stmt[Index.Function.Parameters] as string[]
-  return new Function(funcName, params)
+  return new UserDefinedFunction(funcName, params)
 })
