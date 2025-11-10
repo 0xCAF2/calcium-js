@@ -6,25 +6,25 @@ import type { Statement } from "./statement"
 import * as Idx from "../core/indexes"
 import { CommandNotDefined } from "../error"
 
-export type CommandTable = Map<
-  Kw.Command,
-  (stmt: Statement, exprParser: ExpressionParser) => Cmd.Command
+export type CommandTable<Any = Elem.Any, C = Cmd.Command, K = Kw.Command> = Map<
+  K,
+  (stmt: Statement<Any>, exprParser: ExpressionParser) => C
 >
 
-export class StatementParser {
+export class StatementParser<Any = Elem.Any, C = Cmd.Command, K = Kw.Command> {
   exprParser: ExpressionParser
-  table: CommandTable
+  table: CommandTable<Any, C, K>
 
-  constructor(table: CommandTable, exprParser: ExpressionParser) {
+  constructor(table: CommandTable<Any, C, K>, exprParser: ExpressionParser) {
     this.table = table
     this.exprParser = exprParser
   }
 
-  readStmt(stmt: Statement): Cmd.Command {
-    const kw = stmt[Idx.Statement.Keyword] as Kw.Command
+  readStmt(stmt: Statement<Any>): C {
+    const kw = stmt[Idx.Statement.Keyword] as K
     const cmd = this.table.get(kw)?.(stmt, this.exprParser)
     if (cmd === undefined) {
-      throw new CommandNotDefined(kw)
+      throw new CommandNotDefined(kw as string)
     }
     return cmd
   }
