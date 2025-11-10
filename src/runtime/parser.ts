@@ -30,7 +30,24 @@ export class StatementParser<Any = Elem.Any, C = Cmd.Command, K = Kw.Command> {
   }
 }
 
-export class ExpressionParser {
+export interface ExpressionParser<
+  Any = Elem.Any,
+  BinOp = Elem.BinaryOperator,
+  UnOp = Elem.UnaryOperator,
+  Ref = Elem.Reference,
+  E = Expr.Expression,
+  B = Expr.BinaryOperator,
+  U = Expr.UnaryOperator,
+  R = Expr.Reference
+> {
+  readArgs(elems: Any[]): E[]
+  readBinOp(operator: string, expr: [BinOp, Any, Any]): B
+  readExpr(elem: Any): E
+  readRef(elem: Ref): R
+  readUnOp(operator: string, elem: [UnOp, Any]): U
+}
+
+export class ExpressionParserImpl implements ExpressionParser {
   readArgs(elems: Elem.Any[]): Expr.Expression[] {
     const args: Expr.Expression[] = []
     for (const arg of elems) {
