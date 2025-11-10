@@ -1,5 +1,5 @@
 import ts from "typescript"
-import * as calcium from ".."
+import * as calcium from "../src"
 
 /**
  * parses a node and generate an expression element for Calcium.
