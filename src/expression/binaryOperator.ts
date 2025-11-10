@@ -1,14 +1,14 @@
-import type { Expression } from '.'
-import { Environment } from '../runtime/environment'
-import type { AnyType } from '../runtime/types'
-import * as Kw from '../keywords'
+import type { Expression } from "."
+import { Environment } from "../runtime/environment"
+import type { AnyType } from "../runtime/types"
+import * as Kw from "../core/keywords"
 
 export class BinaryOperator {
   constructor(
     public readonly operator: string,
     public readonly left: Expression,
     public readonly right: Expression
-  ) { }
+  ) {}
   evaluate(env: Environment): AnyType {
     const l = env.evaluate(this.left) as any
     const r = env.evaluate(this.right) as any

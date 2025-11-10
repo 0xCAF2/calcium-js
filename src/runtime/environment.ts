@@ -2,11 +2,12 @@ import { Address } from "./address"
 import { Block, Result } from "./block"
 import { CallingCmd } from "./callingCmd"
 import * as Err from "../error"
-import * as Idx from "../indexes"
+import * as Idx from "../core/indexes"
 import { Namespace } from "./namespace"
 import type { Statement } from "./statement"
 import * as Expr from "../expression"
 import type { AnyType } from "./types"
+import type { StatementParser } from "./parser"
 
 export type OutputFunction = (desc: string) => void
 
@@ -16,13 +17,20 @@ export class Environment {
   calls: CallingCmd[] = []
   code: Statement[]
   context = new Namespace()
+
+  /**
+   * consumes a statement and returns a command.
+   */
+  parser: StatementParser
+
   returnedValue: AnyType
   stack: Namespace[] = []
   thisObj: AnyType
 
-  constructor(code: Statement[]) {
+  constructor(code: Statement[], parser: StatementParser) {
     this.code = code
     this.context = new Namespace()
+    this.parser = parser
   }
 
   evaluate(value: Expr.Expression): AnyType {

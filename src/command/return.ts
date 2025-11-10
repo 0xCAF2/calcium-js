@@ -1,7 +1,10 @@
-import type { Command } from '.'
-import type { Expression } from '../expression'
-import { Kind } from '../runtime/block'
-import { Environment } from '../runtime/environment'
+import type { Command } from "."
+import { commandTable } from "../core/table"
+import type { Expression } from "../expression"
+import { Kind } from "../runtime/block"
+import { Environment } from "../runtime/environment"
+import * as Index from "../core/indexes"
+import * as Keyword from "../core/keywords"
 
 export class Return implements Command {
   public readonly hasExplicitValue: boolean
@@ -30,3 +33,12 @@ export class Return implements Command {
     }
   }
 }
+
+commandTable.set(Keyword.Command.Return, (stmt, exprParser) => {
+  if (stmt.length <= Index.Return.Expr) {
+    return new Return()
+  } else {
+    const expr = exprParser.readExpr(stmt[Index.Return.Expr])
+    return new Return(expr)
+  }
+})

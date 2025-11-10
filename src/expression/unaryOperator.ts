@@ -1,12 +1,12 @@
-import type { Expression } from '.'
-import { Environment } from '../runtime/environment'
-import * as Kw from '../keywords'
+import type { Expression } from "."
+import { Environment } from "../runtime/environment"
+import * as Kw from "../core/keywords"
 
 export class UnaryOperator {
   constructor(
     public readonly operator: string,
     public readonly operand: Expression
-  ) { }
+  ) {}
 
   evaluate(env: Environment): Expression {
     const value = env.evaluate(this.operand)
@@ -14,16 +14,16 @@ export class UnaryOperator {
       case Kw.UnaryOperator.Not:
         return !value
       case Kw.UnaryOperator.Minus:
-        if (typeof value === 'number' || typeof value === 'bigint') {
+        if (typeof value === "number" || typeof value === "bigint") {
           return -value
         } else {
-          throw new Error('- not supported')
+          throw new Error("- not supported")
         }
       case Kw.UnaryOperator.BitwiseNot:
-        if (typeof value === 'number' || typeof value === 'bigint') {
+        if (typeof value === "number" || typeof value === "bigint") {
           return ~value
         } else {
-          throw new Error('~ not supported')
+          throw new Error("~ not supported")
         }
       default:
         throw new Error(`${this.operator} not implemented`)

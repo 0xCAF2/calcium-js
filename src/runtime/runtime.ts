@@ -1,12 +1,14 @@
-import * as Cmd from '../command'
-import * as Err from '../error'
-import { CallingCmd } from './callingCmd'
-import { Environment } from './environment'
-import * as Idx from '../indexes'
-import * as Kw from '../keywords'
-import { Parser } from './parser'
-import type { Statement } from './statement'
-import { Status } from './status'
+import * as Cmd from "../command"
+import * as Err from "../error"
+import { CallingCmd } from "./callingCmd"
+import { Environment } from "./environment"
+import * as Idx from "../core/indexes"
+import * as Kw from "../core/keywords"
+import { StatementParser } from "./parser"
+import type { Statement } from "./statement"
+import { Status } from "./status"
+import { commandTable } from "../core/table"
+import { ExpressionParser } from "./parser"
 
 export class Runtime {
   env: Environment
@@ -17,23 +19,23 @@ export class Runtime {
   isPaused = false
 
   /**
-   * consumes a statement and returns a command.
-   */
-  parser: Parser
-
-  /**
    *
    * @param code a JSON string or an array
    */
-  constructor(code: string | Statement[]) {
-    this.parser = new Parser()
+  constructor(
+    code: string | Statement[],
+    parser: StatementParser = new StatementParser(
+      commandTable,
+      new ExpressionParser()
+    )
+  ) {
     let codeObj: Statement[]
-    if (typeof code === 'string') {
+    if (typeof code === "string") {
       codeObj = JSON.parse(code)
     } else {
       codeObj = code
     }
-    this.env = new Environment(codeObj)
+    this.env = new Environment(codeObj, parser)
   }
 
   /**
@@ -75,7 +77,7 @@ export class Runtime {
     }
 
     let line = this.currentLine
-    let cmd = this.parser.readStmt(line)
+    let cmd = this.env.parser.readStmt(line)
 
     const callerAddr = this.env.address.clone()
     if (
@@ -103,7 +105,7 @@ export class Runtime {
     let nextLine = this.currentLine
     let kw = nextLine[Idx.Statement.Keyword]
     while (kw === Kw.Command.Ifs || kw === Kw.Command.Comment) {
-      cmd = this.parser.readStmt(nextLine)
+      cmd = this.env.parser.readStmt(nextLine)
       cmd.execute(this.env)
       this.env.skipToNextLine()
       nextLine = this.currentLine
