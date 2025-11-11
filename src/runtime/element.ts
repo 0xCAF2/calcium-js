@@ -98,7 +98,6 @@ export type Any =
   | Call
   | New
   | Primitive
-  | Primitive[]
   | ArrayLiteral
   | ObjectLiteral
   | Reference

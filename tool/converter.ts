@@ -39,6 +39,9 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
       calcium.Element.Any,
       calcium.Element.Any
     ]
+  } else if (ts.isTypeOfExpression(n)) {
+    // eg. typeof value
+    return [calcium.Keyword.UnaryOperator.TypeOf, parseExpr(n.expression)]
   } else if (ts.isPrefixUnaryExpression(n)) {
     switch (n.operator) {
       case ts.SyntaxKind.ExclamationToken:
@@ -47,8 +50,40 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
       case ts.SyntaxKind.MinusToken:
         // eg. -num
         return [calcium.Keyword.UnaryOperator.Minus, parseExpr(n.operand)]
+      case ts.SyntaxKind.TildeToken:
+        // eg. ~num
+        return [calcium.Keyword.UnaryOperator.BitwiseNot, parseExpr(n.operand)]
+      case ts.SyntaxKind.PlusPlusToken:
+        // eg. ++value
+        return [
+          calcium.Keyword.UnaryOperator.PreIncrement,
+          parseExpr(n.operand),
+        ]
+      case ts.SyntaxKind.MinusMinusToken:
+        // eg. --value
+        return [
+          calcium.Keyword.UnaryOperator.PreDecrement,
+          parseExpr(n.operand),
+        ]
       default:
         throw new Error("unary operator not implemented")
+    }
+  } else if (ts.isPostfixUnaryExpression(n)) {
+    switch (n.operator) {
+      case ts.SyntaxKind.PlusPlusToken:
+        // eg. value++
+        return [
+          calcium.Keyword.UnaryOperator.PostIncrement,
+          parseExpr(n.operand),
+        ]
+      case ts.SyntaxKind.MinusMinusToken:
+        // eg. value--
+        return [
+          calcium.Keyword.UnaryOperator.PostDecrement,
+          parseExpr(n.operand),
+        ]
+      default:
+        throw new Error("postfix unary operator not implemented")
     }
   } else if (ts.isArrayLiteralExpression(n)) {
     // An array literal in Calcium is nested. eg. ["array", [1, 2, 3]]

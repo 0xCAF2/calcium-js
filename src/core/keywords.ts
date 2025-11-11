@@ -50,6 +50,11 @@ export enum UnaryOperator {
   BitwiseNot = "~",
   Minus = "-_",
   Not = "!",
+  TypeOf = "typeof",
+  PreIncrement = "++_",
+  PreDecrement = "--_",
+  PostIncrement = "_++",
+  PostDecrement = "_--",
 }
 
 export enum Expression {

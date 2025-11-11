@@ -12,8 +12,8 @@ export type CommandTable = Map<
 >
 
 export class StatementParser {
-  exprParser: ExpressionParser
   table: CommandTable
+  exprParser: ExpressionParser
 
   constructor(table: CommandTable, exprParser: ExpressionParser) {
     this.table = table
