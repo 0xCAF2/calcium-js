@@ -5,10 +5,12 @@ import { Environment } from "../runtime/environment"
 import { Namespace } from "../runtime/namespace"
 import type { AnyType } from "../runtime/types"
 import * as Sym from "../runtime/symbols"
-import { Parser } from "../runtime/parser"
 import { End } from "./end"
+import { commandTable } from "../core/table"
+import * as Index from "../core/indexes"
+import * as Keyword from "../core/keywords"
 
-export class Function implements Command {
+export class UserDefinedFunction implements Command {
   constructor(
     public readonly funcName: string,
     public readonly params: string[]
@@ -53,12 +55,11 @@ export class Function implements Command {
       if (isCalledByUser) {
         throw new FunctionCalled()
       } else {
-        const parser = new Parser()
         while (!hasExited) {
           env.skipToNextLine()
           const lastIndex = env.code.length - 1
           if (env.address.indent === 0) {
-            const end = parser.readStmt(env.code.at(-1)!)
+            const end = env.parser.readStmt(env.code.at(-1)!)
             if (end! instanceof End) {
               throw new InvalidEnd()
             }
@@ -69,7 +70,7 @@ export class Function implements Command {
             }
           }
           const line = env.code[env.address.line]
-          const cmd = parser.readStmt(line)
+          const cmd = env.parser.readStmt(line)
           cmd.execute(env)
         }
         env.skipToNextLine()
@@ -86,3 +87,9 @@ export class Function implements Command {
     env.context.register(this.funcName, _f)
   }
 }
+
+commandTable.set(Keyword.Command.Function, (stmt) => {
+  const funcName = stmt[Index.Function.Name] as string
+  const params = stmt[Index.Function.Parameters] as string[]
+  return new UserDefinedFunction(funcName, params)
+})

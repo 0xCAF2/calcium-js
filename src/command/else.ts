@@ -1,5 +1,7 @@
-import { Environment } from '../runtime/environment'
-import { Conditional } from './conditional'
+import { commandTable } from "../core/table"
+import { Environment } from "../runtime/environment"
+import { Conditional } from "./conditional"
+import * as Keyword from "../core/keywords"
 
 export class Else extends Conditional {
   isSatisfied(env: Environment): boolean {
@@ -8,3 +10,7 @@ export class Else extends Conditional {
     return true
   }
 }
+
+commandTable.set(Keyword.Command.Else, () => {
+  return new Else()
+})

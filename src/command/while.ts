@@ -1,10 +1,13 @@
-import type { Command } from '.'
-import type { Expression } from '../expression'
-import { Block, Kind, Result } from '../runtime/block'
-import { Environment } from '../runtime/environment'
+import type { Command } from "."
+import { commandTable } from "../core/table"
+import type { Expression } from "../expression"
+import { Block, Kind, Result } from "../runtime/block"
+import { Environment } from "../runtime/environment"
+import * as Index from "../core/indexes"
+import * as Keyword from "../core/keywords"
 
 export class While implements Command {
-  constructor(public readonly condition: Expression) { }
+  constructor(public readonly condition: Expression) {}
   execute(env: Environment): void {
     const block = new Block(
       Kind.While,
@@ -21,3 +24,8 @@ export class While implements Command {
     block.willEnter(env)
   }
 }
+
+commandTable.set(Keyword.Command.While, (stmt, exprParser) => {
+  const condition = exprParser.readExpr(stmt[Index.Conditional.Expr])
+  return new While(condition)
+})
