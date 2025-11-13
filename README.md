@@ -1,6 +1,7 @@
 # calcium-js
 
-Calcium is a programming language designed to be easy to generate programmatically.
+Calcium is a programming language designed to be easy
+to generate programmatically.
 This repository is a JavaScript implementation of the Calcium interpreter.
 
 ## Installation
@@ -18,7 +19,12 @@ Each command is represented as a JSON array.
 ```json
 [
   [1, [], "=", ["var", "message"], "Hello, World."],
-  [1, [], "expr", ["call", ["var", "print"], [["var", "message"]]]],
+  [
+    1,
+    [],
+    "expr",
+    ["call", ["prop", ["var", "console"], "log"], [["var", "message"]]]
+  ],
   [1, [], "end"]
 ]
 ```
@@ -29,7 +35,7 @@ The meaning of each element in a command is as follows:
 0. Block level (`number`)
 1. Option (`any`)
 2. Keyword (`string`)
-3. (After that) Arguments (`array`)
+3. (After that) Arguments (`any`)
 
 ## What is the first element (block level)?
 
