@@ -10,6 +10,21 @@ import { Status } from "./status"
 import { commandTable } from "../core/table"
 import { ExpressionParser } from "./parser"
 
+export type RuntimeOptions = {
+  /**
+   * a flag to allow accessing the window object in browser environment.
+   * This is useful for code that needs to control the interaction with the DOM.
+   */
+  canAccessWindow: boolean
+
+  /**
+   * a flag to enable global variables in Node environment.
+   * Set to true when you want to test code that relies on global variables
+   * sucn as "console.log()".
+   */
+  enableGlobal: boolean
+}
+
 export class Runtime {
   env: Environment
 
@@ -24,6 +39,7 @@ export class Runtime {
    */
   constructor(
     code: string | Statement[],
+    options: RuntimeOptions = { canAccessWindow: false, enableGlobal: false },
     parser = new StatementParser(commandTable, new ExpressionParser())
   ) {
     let codeObj: Statement[]
@@ -32,7 +48,7 @@ export class Runtime {
     } else {
       codeObj = code
     }
-    this.env = new Environment(codeObj, parser)
+    this.env = new Environment(codeObj, parser, options)
   }
 
   /**

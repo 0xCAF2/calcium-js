@@ -1,4 +1,5 @@
 import { NameNotFound } from "../error"
+import type { RuntimeOptions } from "./runtime"
 import type { AnyType } from "./types"
 
 /**
@@ -14,7 +15,13 @@ export class Namespace {
    *
    * @param parent nesting scope
    */
-  constructor(public readonly parent?: Namespace) {}
+  constructor(
+    public readonly parent?: Namespace,
+    public readonly options: RuntimeOptions = {
+      canAccessWindow: false,
+      enableGlobal: false,
+    }
+  ) {}
 
   /**
    * searches an attribute in a class scope
@@ -37,10 +44,11 @@ export class Namespace {
       return this.parent.lookUp(key)
     }
     try {
-      try {
+      if (this.options.canAccessWindow) {
         // @ts-ignore
         return window[key]
-      } catch {
+      }
+      if (this.options.enableGlobal) {
         // @ts-ignore
         return global[key]
       }
