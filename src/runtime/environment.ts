@@ -8,6 +8,7 @@ import type { Statement } from "./statement"
 import * as Expr from "../expression"
 import type { AnyType } from "./types"
 import type { StatementParser } from "./parser"
+import type { RuntimeOptions } from "./runtime"
 
 export type OutputFunction = (desc: string) => void
 
@@ -16,7 +17,7 @@ export class Environment {
   blocks: Block[] = []
   calls: CallingCmd[] = []
   code: Statement[]
-  context = new Namespace()
+  context: Namespace
 
   /**
    * consumes a statement and returns a command.
@@ -27,9 +28,14 @@ export class Environment {
   stack: Namespace[] = []
   thisObj: AnyType
 
-  constructor(code: Statement[], parser: StatementParser) {
+  constructor(
+    code: Statement[],
+    parser: StatementParser,
+    options: RuntimeOptions
+  ) {
     this.code = code
-    this.context = new Namespace()
+    // initialize the global context with options
+    this.context = new Namespace(undefined, options)
     this.parser = parser
   }
 
