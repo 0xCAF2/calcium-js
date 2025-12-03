@@ -20,7 +20,7 @@ export type RuntimeOptions = {
   /**
    * a flag to enable global variables in Node environment.
    * Set to true when you want to test code that relies on global variables
-   * sucn as "console.log()".
+   * such as "console.log()".
    */
   enableGlobal: boolean
 }
