@@ -40,7 +40,7 @@ The meaning of each element in a command is as follows:
 ## What is the first element (block level)?
 
 Increase the value of the number if you need a block,
-for example, `while`, so on.
+for example, `while`, and so on.
 
 ```json
 [
