@@ -32,3 +32,5 @@ export class PropertyNotExist extends Error {
     super(`${name} not exist.`)
   }
 }
+
+export class UnknownExpr extends Error {}

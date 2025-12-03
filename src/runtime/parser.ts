@@ -4,7 +4,7 @@ import * as Expr from "../expression"
 import * as Kw from "../core/keywords"
 import type { Statement } from "./statement"
 import * as Idx from "../core/indexes"
-import { CommandNotDefined } from "../error"
+import { CommandNotDefined, UnknownExpr } from "../error"
 
 export type CommandTable = Map<
   string,
@@ -97,6 +97,7 @@ export class ExpressionParser {
     } else if (Object.values<string>(Kw.UnaryOperator).includes(kw)) {
       return this.readUnOp(kw, elem as [Elem.UnaryOperator, Elem.Any])
     }
+    throw new UnknownExpr()
   }
 
   readRef(elem: Elem.Reference): Expr.Reference {
