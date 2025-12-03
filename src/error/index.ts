@@ -7,7 +7,7 @@ export class CommandNotDefined extends Error {
 }
 
 /**
- * Used as "GOTO" like control flow when the function is called
+ * Used as a "GOTO"-like control flow mechanism when the function is called
  */
 export class FunctionCalled extends Error {}
 
