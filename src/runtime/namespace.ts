@@ -52,6 +52,7 @@ export class Namespace {
         // @ts-ignore
         return global[key]
       }
+      throw new NameNotFound(key)
     } catch {
       throw new NameNotFound(key)
     }
