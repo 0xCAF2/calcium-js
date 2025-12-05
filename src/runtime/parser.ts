@@ -59,12 +59,11 @@ export class ExpressionParser {
     const kw = elem[Idx.Expression.Keyword] as string
     if (kw === Kw.Expression.Num) {
       const value = elem[Idx.Num.Value] as string
-      const intValue = parseInt(value)
-      if (Number.isNaN(intValue)) {
-        return parseFloat(value)
-      } else {
-        return intValue
+      const cleaned = value.replace(/_/g, "")
+      if (cleaned.includes(".") || /[eE]/.test(cleaned)) {
+        return parseFloat(cleaned)
       }
+      return parseInt(cleaned, 10)
     } else if (kw === Kw.Expression.ArrayLiteral) {
       const items = elem[Idx.ArrayLiteral.Elements] as Elem.Any[]
       return items.map((item) => this.readExpr(item))
