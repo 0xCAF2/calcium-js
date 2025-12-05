@@ -1,7 +1,7 @@
-import { Expression } from '.'
-import { Environment } from '../runtime/environment'
-import { AnyType } from '../runtime/types'
-import * as Kw from '../keywords'
+import type { Expression } from "."
+import { Environment } from "../runtime/environment"
+import type { AnyType } from "../runtime/types"
+import * as Kw from "../core/keywords"
 
 export class BinaryOperator {
   constructor(

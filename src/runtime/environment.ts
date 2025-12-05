@@ -1,12 +1,14 @@
-import { Address } from './address'
-import { Block, Result } from './block'
-import { CallingCmd } from './callingCmd'
-import * as Err from '../error'
-import * as Idx from '../indexes'
-import { Namespace } from './namespace'
-import { Statement } from './statement'
-import * as Expr from '../expression'
-import { AnyType } from './types'
+import { Address } from "./address"
+import { Block, Result } from "./block"
+import { CallingCmd } from "./callingCmd"
+import * as Err from "../error"
+import * as Idx from "../core/indexes"
+import { Namespace } from "./namespace"
+import type { Statement } from "./statement"
+import * as Expr from "../expression"
+import type { AnyType } from "./types"
+import type { StatementParser } from "./parser"
+import type { RuntimeOptions } from "./runtime"
 
 export type OutputFunction = (desc: string) => void
 
@@ -15,14 +17,26 @@ export class Environment {
   blocks: Block[] = []
   calls: CallingCmd[] = []
   code: Statement[]
-  context = new Namespace()
+  context: Namespace
+
+  /**
+   * consumes a statement and returns a command.
+   */
+  parser: StatementParser
+
   returnedValue: AnyType
   stack: Namespace[] = []
   thisObj: AnyType
 
-  constructor(code: Statement[]) {
+  constructor(
+    code: Statement[],
+    parser: StatementParser,
+    options: RuntimeOptions
+  ) {
     this.code = code
-    this.context = new Namespace()
+    // initialize the global context with options
+    this.context = new Namespace(undefined, options)
+    this.parser = parser
   }
 
   evaluate(value: Expr.Expression): AnyType {
@@ -31,9 +45,9 @@ export class Environment {
       value instanceof Expr.Property ||
       value instanceof Expr.Subscript ||
       value instanceof Expr.Call ||
+      value instanceof Expr.New ||
       value instanceof Expr.BinaryOperator ||
-      value instanceof Expr.UnaryOperator ||
-      value instanceof Expr.New
+      value instanceof Expr.UnaryOperator
     ) {
       return value.evaluate(this)
     } else {

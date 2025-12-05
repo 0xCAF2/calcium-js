@@ -1,8 +1,8 @@
-import { AnyType } from '../runtime/types'
-import { NotCallable } from '../error'
-import { Reference } from './'
-import { Environment } from '../runtime/environment'
-import * as Sym from '../runtime/symbols'
+import type { AnyType } from "../runtime/types"
+import { NotCallable } from "../error"
+import type { Reference } from "./"
+import { Environment } from "../runtime/environment"
+import * as Sym from "../runtime/symbols"
 
 export class Call {
   private returnedValue: AnyType
@@ -19,7 +19,7 @@ export class Call {
     const func = env.evaluate(this.funcRef)
     if (!this.isCalled) {
       this.isCalled = true
-      if (typeof func === 'function') {
+      if (typeof func === "function") {
         const thisObj = env.thisObj
         env.thisObj = undefined
         const f = Reflect.get(func, Sym.calledByUser)

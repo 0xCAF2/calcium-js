@@ -1,7 +1,9 @@
-import { Command } from '.'
-import { InvalidBreak } from '../error'
-import { Kind } from '../runtime/block'
-import { Environment } from '../runtime/environment'
+import type { Command } from "."
+import { commandTable } from "../core/table"
+import { InvalidBreak } from "../error"
+import { Kind } from "../runtime/block"
+import { Environment } from "../runtime/environment"
+import * as Keyword from "../core/keywords"
 
 export class Break implements Command {
   execute(env: Environment): void {
@@ -22,3 +24,7 @@ export class Break implements Command {
     }
   }
 }
+
+commandTable.set(Keyword.Command.Break, () => {
+  return new Break()
+})

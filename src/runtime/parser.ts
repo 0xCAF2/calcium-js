@@ -1,89 +1,36 @@
-import * as Cmd from '../command'
-import * as Elem from './element'
-import * as Err from '../error'
-import * as Expr from '../expression'
-import * as Kw from '../keywords'
-import { Statement } from './statement'
-import * as Idx from '../indexes'
-import { AnyType } from './types'
+import * as Cmd from "../command"
+import * as Elem from "../runtime/element"
+import * as Expr from "../expression"
+import * as Kw from "../core/keywords"
+import type { Statement } from "./statement"
+import * as Idx from "../core/indexes"
+import { CommandNotDefined, UnknownExpr } from "../error"
 
-export class Parser {
-  readonly table = new Map<Kw.Command, (stmt: Statement) => Cmd.Command>()
+export type CommandTable = Map<
+  string,
+  (stmt: Statement, exprParser: ExpressionParser) => Cmd.Command
+>
 
-  constructor() {
-    this.table.set(Kw.Command.Assign, (stmt) => {
-      const lhs = this.readRef(stmt[Idx.Assign.Lhs] as Elem.Reference)
-      const rhs = this.readExpr(stmt[Idx.Assign.Rhs])
-      return new Cmd.Assign(lhs, rhs)
-    })
-    this.table.set(Kw.Command.Break, (stmt) => {
-      return new Cmd.Break()
-    })
-    this.table.set(Kw.Command.Comment, (stmt) => {
-      return new Cmd.Comment(stmt[Idx.Comment.Text] as string | undefined)
-    })
-    this.table.set(Kw.Command.Continue, (stmt) => {
-      return new Cmd.Continue()
-    })
-    this.table.set(Kw.Command.Const, (stmt) => {
-      const name = stmt[Idx.Assign.Lhs] as string
-      const value = this.readExpr(stmt[Idx.Assign.Rhs])
-      return new Cmd.Const(name, value)
-    })
-    this.table.set(Kw.Command.Else, (stmt) => {
-      return new Cmd.Else()
-    })
-    this.table.set(Kw.Command.ElseIf, (stmt) => {
-      const condition = this.readExpr(stmt[Idx.Conditional.Expr])
-      return new Cmd.ElseIf(condition)
-    })
-    this.table.set(Kw.Command.End, (stmt) => {
-      return new Cmd.End()
-    })
-    this.table.set(Kw.Command.ExprStmt, (stmt) => {
-      const expr = this.readExpr(stmt[Idx.ExprStmt.Expr])
-      return new Cmd.ExprStmt(expr)
-    })
-    this.table.set(Kw.Command.ForOf, (stmt) => {
-      const variableName = stmt[Idx.ForOf.VariableName] as string
-      const iterable = this.readExpr(stmt[Idx.ForOf.Iterable])
-      return new Cmd.ForOf(variableName, iterable)
-    })
-    this.table.set(Kw.Command.Function, (stmt) => {
-      const funcName = stmt[Idx.Function.Name] as string
-      const params = stmt[Idx.Function.Parameters] as string[]
-      return new Cmd.Function(funcName, params)
-    })
-    this.table.set(Kw.Command.If, (stmt) => {
-      const condition = this.readExpr(stmt[Idx.Conditional.Expr])
-      return new Cmd.If(condition)
-    })
-    this.table.set(Kw.Command.Ifs, (stmt) => {
-      return new Cmd.Ifs()
-    })
-    this.table.set(Kw.Command.Let, (stmt) => {
-      const name = stmt[Idx.Assign.Lhs] as string
-      if (stmt.length <= Idx.Assign.Rhs) {
-        return new Cmd.Let(name)
-      } else {
-        const value = this.readExpr(stmt[Idx.Assign.Rhs])
-        return new Cmd.Let(name, value)
-      }
-    })
-    this.table.set(Kw.Command.Return, (stmt) => {
-      if (stmt.length <= Idx.Return.Expr) {
-        return new Cmd.Return()
-      } else {
-        const expr = this.readExpr(stmt[Idx.Return.Expr])
-        return new Cmd.Return(expr)
-      }
-    })
-    this.table.set(Kw.Command.While, (stmt) => {
-      const condition = this.readExpr(stmt[Idx.Conditional.Expr])
-      return new Cmd.While(condition)
-    })
+export class StatementParser {
+  table: CommandTable
+  exprParser: ExpressionParser
+
+  constructor(table: CommandTable, exprParser: ExpressionParser) {
+    this.table = table
+    this.exprParser = exprParser
   }
 
+  readStmt(stmt: Statement): Cmd.Command {
+    const kw = stmt[Idx.Statement.Keyword]
+    const cmd = this.table.get(kw)?.(stmt, this.exprParser)
+    if (cmd === undefined) {
+      throw new CommandNotDefined(kw)
+    }
+    return cmd
+  }
+}
+
+export class ExpressionParser {
   readArgs(elems: Elem.Any[]): Expr.Expression[] {
     const args: Expr.Expression[] = []
     for (const arg of elems) {
@@ -92,43 +39,64 @@ export class Parser {
     return args
   }
 
-  readBinOp(operator: string, expr: Elem.Any[]): Expr.BinaryOperator {
+  readBinOp(
+    operator: string,
+    expr: [Elem.BinaryOperator, Elem.Any, Elem.Any]
+  ): Expr.BinaryOperator {
     const left = this.readExpr(expr[Idx.BinaryOperator.Left])
     const right = this.readExpr(expr[Idx.BinaryOperator.Right])
     return new Expr.BinaryOperator(operator, left, right)
   }
 
   readExpr(elem: Elem.Any): Expr.Expression {
-    if (Array.isArray(elem)) {
-      if (Array.isArray(elem[0])) {
-        // an array literal
-        return elem[0] as AnyType[]
-      } else {
-        const kw = elem[Idx.Expression.Keyword] as string
-        if (
-          kw === Kw.Reference.Variable ||
-          kw === Kw.Reference.Property ||
-          kw === Kw.Reference.Subscript
-        ) {
-          return this.readRef(elem as Elem.Reference)
-        } else if (kw === Kw.Expression.Call) {
-          const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
-          const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
-          return new Expr.Call(ref, args)
-        } else if (kw === Kw.Expression.New) {
-          const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
-          const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
-          return new Expr.New(klass, args)
-        } else if (elem.length === 3) {
-          return this.readBinOp(kw, elem)
-        } else if (elem.length === 2) {
-          return this.readUnOp(kw, elem)
-        }
-      }
-    } else {
+    if (
+      typeof elem === "string" ||
+      typeof elem === "boolean" ||
+      elem === null
+    ) {
       return elem
     }
-    throw new Error('Not implemented')
+    const kw = elem[Idx.Expression.Keyword] as string
+    if (kw === Kw.Expression.Num) {
+      const value = elem[Idx.Num.Value] as string
+      const cleaned = value.replace(/_/g, "")
+      if (cleaned.includes(".") || /[eE]/.test(cleaned)) {
+        return parseFloat(cleaned)
+      }
+      return parseInt(cleaned, 10)
+    } else if (kw === Kw.Expression.ArrayLiteral) {
+      const items = elem[Idx.ArrayLiteral.Elements] as Elem.Any[]
+      return items.map((item) => this.readExpr(item))
+    } else if (kw === Kw.Expression.ObjectLiteral) {
+      const props = elem[Idx.ObjectLiteral.Properties] as Elem.KeyValuePair[]
+      const obj: { [key: string]: Expr.Expression } = {}
+      for (const [key, value] of props) {
+        obj[key] = this.readExpr(value)
+      }
+      return obj
+    } else if (
+      kw === Kw.Reference.Variable ||
+      kw === Kw.Reference.Property ||
+      kw === Kw.Reference.Subscript
+    ) {
+      return this.readRef(elem as Elem.Reference)
+    } else if (kw === Kw.Expression.Call) {
+      const ref = this.readRef(elem[Idx.Call.FuncRef] as Elem.Reference)
+      const args = this.readArgs(elem[Idx.Call.Args] as Elem.Any[])
+      return new Expr.Call(ref, args)
+    } else if (kw === Kw.Expression.New) {
+      const klass = this.readRef(elem[Idx.New.Class] as Elem.Reference)
+      const args = this.readArgs(elem[Idx.New.Args] as Elem.Any[])
+      return new Expr.New(klass, args)
+    } else if (Object.values<string>(Kw.BinaryOperator).includes(kw)) {
+      return this.readBinOp(
+        kw,
+        elem as [Elem.BinaryOperator, Elem.Any, Elem.Any]
+      )
+    } else if (Object.values<string>(Kw.UnaryOperator).includes(kw)) {
+      return this.readUnOp(kw, elem as [Elem.UnaryOperator, Elem.Any])
+    }
+    throw new UnknownExpr()
   }
 
   readRef(elem: Elem.Reference): Expr.Reference {
@@ -146,20 +114,14 @@ export class Parser {
       const index = this.readExpr(elem[Idx.Subscript.IndexExpr] as Elem.Any)
       return new Expr.Subscript(referredObj, index)
     } else {
-      throw new Error('Not implemented')
+      throw new Error("Not implemented")
     }
   }
 
-  readStmt(stmt: Statement): Cmd.Command {
-    const kw = stmt[Idx.Statement.Keyword] as Kw.Command
-    const cmd = this.table.get(kw)?.(stmt)
-    if (cmd === undefined) {
-      throw new Err.CommandNotDefined(kw)
-    }
-    return cmd
-  }
-
-  readUnOp(operator: string, elem: Elem.Any[]): Expr.Expression {
+  readUnOp(
+    operator: string,
+    elem: [Elem.UnaryOperator, Elem.Any]
+  ): Expr.UnaryOperator {
     return new Expr.UnaryOperator(
       operator,
       this.readExpr(elem[Idx.UnaryOperator.Operand])

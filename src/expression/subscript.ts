@@ -1,7 +1,7 @@
-import { Expression, Reference } from '.'
-import { CannotAccessElement } from '../error'
-import { Environment } from '../runtime/environment'
-import { AnyType } from '../runtime/types'
+import type { Expression, Reference } from "."
+import { CannotAccessElement } from "../error"
+import { Environment } from "../runtime/environment"
+import type { AnyType } from "../runtime/types"
 
 export class Subscript {
   constructor(
@@ -11,7 +11,7 @@ export class Subscript {
 
   assign(rhs: AnyType, env: Environment) {
     const indexValue = env.evaluate(this.index)
-    if (!(typeof indexValue === 'number' || typeof indexValue === 'string')) {
+    if (!(typeof indexValue === "number" || typeof indexValue === "string")) {
       throw new CannotAccessElement()
     }
     const rhsValue = env.evaluate(rhs)
@@ -22,7 +22,7 @@ export class Subscript {
 
   evaluate(env: Environment) {
     const indexValue = env.evaluate(this.index)
-    if (!(typeof indexValue === 'number' || typeof indexValue === 'string')) {
+    if (!(typeof indexValue === "number" || typeof indexValue === "string")) {
       throw new CannotAccessElement()
     }
     const ref = env.evaluate(this.referredObj) as any

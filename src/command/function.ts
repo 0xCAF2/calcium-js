@@ -1,16 +1,16 @@
-import { Command } from '.'
-import { FunctionCalled, InvalidEnd } from '../error'
-import { Block, Kind, Result } from '../runtime/block'
-import { Constant } from '../runtime/constant'
-import { Environment } from '../runtime/environment'
-import { Namespace } from '../runtime/namespace'
-import { AnyType } from '../runtime/types'
-import * as Sym from '../runtime/symbols'
-import { Parser } from '../runtime/parser'
-import { End } from './end'
-import { Variable } from '../runtime/variable'
+import type { Command } from "."
+import { FunctionCalled, InvalidEnd } from "../error"
+import { Block, Kind, Result } from "../runtime/block"
+import { Environment } from "../runtime/environment"
+import { Namespace } from "../runtime/namespace"
+import type { AnyType } from "../runtime/types"
+import * as Sym from "../runtime/symbols"
+import { End } from "./end"
+import { commandTable } from "../core/table"
+import * as Index from "../core/indexes"
+import * as Keyword from "../core/keywords"
 
-export class Function implements Command {
+export class UserDefinedFunction implements Command {
   constructor(
     public readonly funcName: string,
     public readonly params: string[]
@@ -26,7 +26,7 @@ export class Function implements Command {
     function _f(...args: AnyType[]) {
       const callerAddr = env.address.clone()
       const local = new Namespace(parentScope)
-      params.forEach((p, i) => local.register(p, new Constant(p, args[i])))
+      params.forEach((p, i) => local.register(p, args[i]))
       const calleeAddr = definedAddr.clone()
       calleeAddr.calls = callerAddr.calls + 1
 
@@ -55,13 +55,12 @@ export class Function implements Command {
       if (isCalledByUser) {
         throw new FunctionCalled()
       } else {
-        const parser = new Parser()
         while (!hasExited) {
           env.skipToNextLine()
           const lastIndex = env.code.length - 1
           if (env.address.indent === 0) {
-            const end = parser.readStmt(env.code.at(-1)!)
-            if (end! instanceof End) {
+            const end = env.parser.readStmt(env.code.at(-1)!)
+            if (!(end instanceof End)) {
               throw new InvalidEnd()
             }
             break
@@ -71,7 +70,7 @@ export class Function implements Command {
             }
           }
           const line = env.code[env.address.line]
-          const cmd = parser.readStmt(line)
+          const cmd = env.parser.readStmt(line)
           cmd.execute(env)
         }
         env.skipToNextLine()
@@ -85,6 +84,12 @@ export class Function implements Command {
       return (...args: AnyType[]) => _f(...args)
     })
 
-    env.context.register(this.funcName, new Variable(this.funcName, _f))
+    env.context.register(this.funcName, _f)
   }
 }
+
+commandTable.set(Keyword.Command.Function, (stmt) => {
+  const funcName = stmt[Index.Function.Name] as string
+  const params = stmt[Index.Function.Parameters] as string[]
+  return new UserDefinedFunction(funcName, params)
+})

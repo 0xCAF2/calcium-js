@@ -1,7 +1,7 @@
-import { Reference } from '.'
-import { NameNotFound, PropertyNotExist } from '../error'
-import { Environment } from '../runtime/environment'
-import { AnyType } from '../runtime/types'
+import type { Reference } from "."
+import { PropertyDoesNotExist } from "../error"
+import { Environment } from "../runtime/environment"
+import type { AnyType } from "../runtime/types"
 
 export class Property {
   constructor(
@@ -16,11 +16,11 @@ export class Property {
 
   evaluate(env: Environment): AnyType {
     const ref = env.evaluate(this.referredObj) as any
-    if (ref === null || ref === undefined || typeof ref === 'boolean') {
-      throw new PropertyNotExist(this.propertyName)
+    if (ref === null || ref === undefined || typeof ref === "boolean") {
+      throw new PropertyDoesNotExist(this.propertyName)
     }
     const value = ref[this.propertyName]
-    if (typeof value === 'function') {
+    if (typeof value === "function") {
       env.thisObj = ref
     }
     return value

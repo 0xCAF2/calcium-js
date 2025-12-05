@@ -1,89 +1,105 @@
 /**
  * a primitive type in JSON
  */
-export type Primitive = number | string | boolean | null
+export type Primitive = string | boolean | null
 
 /**
  * an array type in JSON
  */
-export type ArrayLiteral = [Any[]]
+export type ArrayLiteral = ["array", Any[]]
 
+export type KeyValuePair = [string, Any]
 /**
  * an object type in JSON
  */
-export type ObjectLiteral = {}
+export type ObjectLiteral = ["object", KeyValuePair[]]
 
 /**
  * a reference expression
  */
-export type Reference = Call | Property | Subscript | Variable
+export type Reference = Property | Subscript | Variable
 
 /**
  * a binary operator
  */
-export type BinaryOperator = [
-  (
-    | '+'
-    | '-'
-    | '*'
-    | '**'
-    | '/'
-    | '%'
-    | '==='
-    | '!=='
-    | '>'
-    | '>='
-    | '<'
-    | '<='
-    | '&&'
-    | '||'
-    | '&'
-    | '|'
-    | '^'
-    | '<<'
-    | '>>'
-  ),
-  Any,
-  Any
-]
+export type BinaryOperator =
+  | "+"
+  | "-"
+  | "*"
+  | "**"
+  | "/"
+  | "%"
+  | "==="
+  | "!=="
+  | ">"
+  | ">="
+  | "<"
+  | "<="
+  | "&&"
+  | "||"
+  | "&"
+  | "|"
+  | "^"
+  | "<<"
+  | ">>"
 
 /**
  * a unary operator
  */
-export type UnaryOperator = ['~' | '-_' | '!', Any]
+export type UnaryOperator =
+  | "~"
+  | "-_"
+  | "!"
+  | "typeof"
+  | "++_"
+  | "--_"
+  | "_++"
+  | "_--"
 
 /**
  * a function call
  */
-export type Call = ['call', Reference, Any[]]
+export type Call = ["call", Reference, Any[]]
 
+/**
+ * a class instantiation
+ */
+export type New = ["new", Reference, Any[]]
+
+/**
+ * a number literal
+ */
+export type Num = ["num", string]
 /**
  * used for the key of a subscript
  */
-export type IndexOrKey = number | string | Variable | Property
+export type IndexOrKey = Num | string | Variable | Property
 
 /**
  * property access with . syntax.
  */
-export type Property = ['prop', Reference, string]
+export type Property = ["prop", Reference, string]
 
 /**
  * subscript access with ['key'] syntax
  */
-export type Subscript = ['sub', Reference, IndexOrKey]
+export type Subscript = ["sub", Reference, IndexOrKey]
 
 /**
- * uses a variable (or a constant)
+ * reference a variable (or a constant)
  */
-export type Variable = ['var', string]
+export type Variable = ["var", string]
 
 /**
  * any element of a JSON code
  */
 export type Any =
+  | Num
+  | Call
+  | New
   | Primitive
   | ArrayLiteral
   | ObjectLiteral
   | Reference
-  | BinaryOperator
-  | UnaryOperator
+  | [BinaryOperator, Any, Any]
+  | [UnaryOperator, Any]

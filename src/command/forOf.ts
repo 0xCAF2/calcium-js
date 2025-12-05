@@ -1,8 +1,10 @@
-import { Command } from '.'
-import { Expression } from '../expression'
-import { Block, Kind, Result } from '../runtime/block'
-import { Constant } from '../runtime/constant'
-import { Environment } from '../runtime/environment'
+import type { Command } from "."
+import { commandTable } from "../core/table"
+import type { Expression } from "../expression"
+import { Block, Kind, Result } from "../runtime/block"
+import { Environment } from "../runtime/environment"
+import * as Index from "../core/indexes"
+import * as Keyword from "../core/keywords"
 
 export class ForOf implements Command {
   constructor(
@@ -20,10 +22,7 @@ export class ForOf implements Command {
         if (nextObj.done) {
           return false
         }
-        env.context.register(
-          this.variableName,
-          new Constant(this.variableName, nextObj.value)
-        )
+        env.context.register(this.variableName, nextObj.value)
         return true
       },
       (env) => {
@@ -34,3 +33,9 @@ export class ForOf implements Command {
     block.willEnter(env)
   }
 }
+
+commandTable.set(Keyword.Command.ForOf, (stmt, exprParser) => {
+  const variableName = stmt[Index.ForOf.VariableName] as string
+  const iterable = exprParser.readExpr(stmt[Index.ForOf.Iterable])
+  return new ForOf(variableName, iterable)
+})

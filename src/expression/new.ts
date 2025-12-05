@@ -1,5 +1,5 @@
-import { Expression, Reference } from '.'
-import { Environment } from '../runtime/environment'
+import type { Expression, Reference } from "."
+import { Environment } from "../runtime/environment"
 
 export class New {
   constructor(
