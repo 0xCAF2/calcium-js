@@ -60,7 +60,7 @@ export class UserDefinedFunction implements Command {
           const lastIndex = env.code.length - 1
           if (env.address.indent === 0) {
             const end = env.parser.readStmt(env.code.at(-1)!)
-            if (end! instanceof End) {
+            if (!(end instanceof End)) {
               throw new InvalidEnd()
             }
             break
