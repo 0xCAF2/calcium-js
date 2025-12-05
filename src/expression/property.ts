@@ -1,5 +1,5 @@
 import type { Reference } from "."
-import { PropertyNotExist } from "../error"
+import { PropertyDoesNotExist } from "../error"
 import { Environment } from "../runtime/environment"
 import type { AnyType } from "../runtime/types"
 
@@ -17,7 +17,7 @@ export class Property {
   evaluate(env: Environment): AnyType {
     const ref = env.evaluate(this.referredObj) as any
     if (ref === null || ref === undefined || typeof ref === "boolean") {
-      throw new PropertyNotExist(this.propertyName)
+      throw new PropertyDoesNotExist(this.propertyName)
     }
     const value = ref[this.propertyName]
     if (typeof value === "function") {

@@ -27,9 +27,9 @@ export class NameNotFound extends Error {
 
 export class NotCallable extends Error {}
 
-export class PropertyNotExist extends Error {
+export class PropertyDoesNotExist extends Error {
   constructor(public readonly name: string) {
-    super(`${name} not exist.`)
+    super(`${name} does not exist.`)
   }
 }
 
