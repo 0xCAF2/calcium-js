@@ -13,8 +13,8 @@ export class Continue implements Command {
         block.willEnter(env)
         break
       } else if (
-        block?.kind === Kind.Ifs ||
-        block?.kind === Kind.IfElseIfElse
+        block?.kind === Kind.IfContainer ||
+        block?.kind === Kind.IfOrElseIfOrElse
       ) {
         env.address.shift(-1)
         continue

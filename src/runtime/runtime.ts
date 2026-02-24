@@ -40,7 +40,7 @@ export class Runtime {
   constructor(
     code: string | Statement[],
     options: RuntimeOptions = { canAccessWindow: false, enableGlobal: false },
-    parser = new StatementParser(commandTable, new ExpressionParser())
+    parser = new StatementParser(commandTable, new ExpressionParser()),
   ) {
     let codeObj: Statement[]
     if (typeof code === "string") {
@@ -117,7 +117,7 @@ export class Runtime {
     this.env.skipToNextLine()
     let nextLine = this.currentLine
     let kw = nextLine[Idx.Statement.Keyword]
-    while (kw === Kw.Command.Ifs || kw === Kw.Command.Comment) {
+    while (kw === Kw.Command.IfContainer || kw === Kw.Command.Comment) {
       cmd = this.env.parser.readStmt(nextLine)
       cmd.execute(this.env)
       this.env.skipToNextLine()

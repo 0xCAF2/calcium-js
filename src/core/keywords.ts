@@ -35,7 +35,7 @@ export enum Command {
   ForOf = "for of",
   Function = "function",
   If = "if",
-  Ifs = "ifs",
+  IfContainer = "ifc",
   Return = "return",
   While = "while",
 }

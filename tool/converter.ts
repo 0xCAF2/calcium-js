@@ -246,7 +246,7 @@ export function convert(sourceCode: string): string {
       const condition = parseExpr(stmt.expression)
 
       // Calcium has nested extra blocks for an if statement
-      code.push([indent, [], calcium.Keyword.Command.Ifs])
+      code.push([indent, [], calcium.Keyword.Command.IfContainer])
 
       // increment the indent
       ++indent

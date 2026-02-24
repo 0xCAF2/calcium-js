@@ -7,21 +7,21 @@ import * as Keyword from "../core/keywords"
 /**
  * a parent block of `If`, `ElseIf` and `Else`.
  */
-export class Ifs implements Command {
+export class IfContainer implements Command {
   execute(env: Environment): void {
     const block = new Block(
-      Kind.Ifs,
+      Kind.IfContainer,
       env.address,
       () => true,
       (env) => {
         env.address.shift(-1)
         return Result.Shifted
-      }
+      },
     )
     block.willEnter(env)
   }
 }
 
-commandTable.set(Keyword.Command.Ifs, () => {
-  return new Ifs()
+commandTable.set(Keyword.Command.IfContainer, () => {
+  return new IfContainer()
 })
