@@ -4,6 +4,7 @@ import { convertJsToCalcium } from "./fileReader"
 
 export function runTest(fileName: string): void {
   const code = convertJsToCalcium(fileName)
+  // console.log(code)
   const runtime = new Runtime(code, {
     canAccessWindow: false,
     enableGlobal: true,
