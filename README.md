@@ -16,24 +16,37 @@ npm install calcium-js
 
 Each command is represented as a JSON array.
 
+<!-- prettier-ignore-start -->
 ```json
 [
-  [1, [], "=", ["var", "message"], "Hello, World."],
   [
-    1,
-    [],
-    "expr",
-    ["call", ["prop", ["var", "console"], "log"], [["var", "message"]]]
+    1, [],
+    "=", ["var", "message"], "Hello, World."
   ],
-  [1, [], "end"]
+  [
+    1, [],
+    "expr", ["call", ["prop", ["var", "console"], "log"], [["var", "message"]]]
+  ],
+  [
+    1, [],
+    "end"
+  ]
 ]
+```
+<!-- prettier-ignore-end -->
+
+The code above corresponds to:
+
+```js
+let message = "Hello, World."
+console.log(message)
 ```
 
 The commands are equivalent to statements.
 The meaning of each element in a command is as follows:
 
 0. Block level (`number`)
-1. Option (`any`)
+1. Option (`any`) : This is reserved for future use, so it is currently ignored.
 2. Keyword (`string`)
 3. (After that) Arguments (`any`)
 
@@ -42,19 +55,28 @@ The meaning of each element in a command is as follows:
 Increase the value of the number if you need a block,
 for example, `while`, and so on.
 
+<!-- prettier-ignore-start -->
 ```json
 [
-  [1, [], "=", ["var", "i"], ["num", "0"]],
-  [1, [], "while", ["<", ["var", "i"], ["num", "10"]]],
   [
-    2,
-    [],
-    "expr",
-    ["call", ["prop", ["var", "console"], "log"], [["_++", ["var", "i"]]]]
+    1, [],
+    "=", ["var", "i"], ["num", "0"]
   ],
-  [1, [], "end"]
+  [
+    1, [],
+    "while", ["<", ["var", "i"], ["num", "10"]]
+  ],
+  [
+    2, [],
+    "expr", ["call", ["prop", ["var", "console"], "log"], [["_++", ["var", "i"]]]]
+  ],
+  [
+    1, [],
+    "end"
+  ]
 ]
 ```
+<!-- prettier-ignore-end -->
 
 The code above corresponds to:
 
