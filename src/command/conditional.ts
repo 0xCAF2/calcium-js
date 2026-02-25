@@ -3,7 +3,7 @@ import type { Command } from "."
 import { Block, Kind, Result } from "../runtime/block"
 
 /**
- * a base class for `If`, `Elif` and `Else` commands
+ * a base class for `If`, `ElseIf` and `Else` commands
  */
 export abstract class Conditional implements Command {
   execute(env: Environment): void {
