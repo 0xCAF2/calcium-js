@@ -1,22 +1,22 @@
-import { Environment } from '../runtime/environment'
-import type { Command } from '.'
-import { Block, Kind, Result } from '../runtime/block'
+import { Environment } from "../runtime/environment"
+import type { Command } from "."
+import { Block, Kind, Result } from "../runtime/block"
 
 /**
- * a base class for `If`, `Elif` and `Else` commands
+ * a base class for `If`, `ElseIf` and `Else` commands
  */
 export abstract class Conditional implements Command {
   execute(env: Environment): void {
     if (this.isSatisfied(env)) {
       const block = new Block(
-        Kind.IfElseIfElse,
+        Kind.IfOrElseIfOrElse,
         env.address,
         () => true,
         (env) => {
-          env.address.shift(-2) // the indent is now same as Ifs command
-          env.blocks.pop() // therefore the Ifs block will be popped here
+          env.address.shift(-2) // the indent is now same as IfContainer command
+          env.blocks.pop() // therefore the IfContainer block will be popped here
           return Result.Jumpped
-        }
+        },
       )
       block.willEnter(env)
     }

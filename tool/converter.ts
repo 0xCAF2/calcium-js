@@ -37,7 +37,7 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
     ] as [
       calcium.Keyword.BinaryOperator,
       calcium.Element.Any,
-      calcium.Element.Any
+      calcium.Element.Any,
     ]
   } else if (ts.isTypeOfExpression(n)) {
     // eg. typeof value
@@ -168,7 +168,7 @@ export function parseExpr(n: ts.Node): calcium.Element.Any {
 /**
  *
  * @param sourceCode a string value of the source code
- * written by JavaScript's subset
+ * written by the subset of JavaScript
  */
 export function convert(sourceCode: string): string {
   // The result is an array of Calcium language's code
@@ -209,7 +209,7 @@ export function convert(sourceCode: string): string {
           .some(
             (n) =>
               n.kind === ts.SyntaxKind.BinaryExpression &&
-              n.getChildAt(1).kind === ts.SyntaxKind.FirstAssignment
+              n.getChildAt(1).kind === ts.SyntaxKind.FirstAssignment,
           )
       ) {
         // Although assigned later, initial value is required
@@ -227,7 +227,7 @@ export function convert(sourceCode: string): string {
             lhs = parseExpr(assignment.left) as calcium.Element.Reference
             rhs = parseExpr(assignment.right)
             return n // need a return value
-          }
+          },
         )
         code.push([indent, [], calcium.Keyword.Command.Assignment, lhs, rhs])
       } else {
@@ -246,7 +246,7 @@ export function convert(sourceCode: string): string {
       const condition = parseExpr(stmt.expression)
 
       // Calcium has nested extra blocks for an if statement
-      code.push([indent, [], calcium.Keyword.Command.Ifs])
+      code.push([indent, [], calcium.Keyword.Command.IfContainer])
 
       // increment the indent
       ++indent
@@ -376,7 +376,7 @@ export function convert(sourceCode: string): string {
     "converted.cajs",
     sourceCode,
     ts.ScriptTarget.ES2015,
-    true
+    true,
   ).statements) {
     _visit(stmt)
   }

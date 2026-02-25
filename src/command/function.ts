@@ -13,19 +13,19 @@ import * as Keyword from "../core/keywords"
 export class UserDefinedFunction implements Command {
   constructor(
     public readonly funcName: string,
-    public readonly params: string[]
+    public readonly params: string[],
   ) {}
 
   execute(env: Environment): void {
     const definedAddr = env.address.clone()
-    const parentScope = env.context.parent
+    const parentScope = env.context
     const params = this.params
 
     let isCalledByUser = false
 
     function _f(...args: AnyType[]) {
       const callerAddr = env.address.clone()
-      const local = new Namespace(parentScope)
+      const local = new Namespace(parentScope, parentScope?.options)
       params.forEach((p, i) => local.register(p, args[i]))
       const calleeAddr = definedAddr.clone()
       calleeAddr.calls = callerAddr.calls + 1
@@ -48,7 +48,7 @@ export class UserDefinedFunction implements Command {
           env.context = env.stack.pop()!
           hasExited = true
           return Result.Jumpped
-        }
+        },
       )
       block.willEnter(env)
 
