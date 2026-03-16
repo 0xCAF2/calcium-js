@@ -57,9 +57,9 @@ export class UserDefinedFunction implements Command {
       } else {
         while (!hasExited) {
           env.skipToNextLine()
-          const lastIndex = env.code.length - 1
+          const lastIndex = env.currentModule.length - 1
           if (env.address.indent === 0) {
-            const end = env.parser.readStmt(env.code.at(-1)!)
+            const end = env.parser.readStmt(env.currentModule.at(-1)!)
             if (!(end instanceof End)) {
               throw new InvalidEnd()
             }
@@ -69,7 +69,7 @@ export class UserDefinedFunction implements Command {
               break
             }
           }
-          const line = env.code[env.address.line]
+          const line = env.currentModule[env.address.line]
           const cmd = env.parser.readStmt(line)
           cmd.execute(env)
         }

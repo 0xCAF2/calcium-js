@@ -36,6 +36,9 @@ export class Runtime {
   /**
    *
    * @param code a JSON string or an array
+   * @param options options for this runtime
+   * @param parser a statement parser for this runtime. You can provide a custom parser if you want to extend the language.
+   * If not provided, the default parser with the default command table will be used.
    */
   constructor(
     code: string | Statement[],
@@ -48,7 +51,7 @@ export class Runtime {
     } else {
       codeObj = code
     }
-    this.env = new Environment(codeObj, parser, options)
+    this.env = new Environment(parser, options, codeObj)
   }
 
   /**
@@ -80,7 +83,7 @@ export class Runtime {
   }
 
   step(): Status {
-    const lastIndex = this.env.code.length - 1
+    const lastIndex = this.env.code[this.env.address.module].length - 1
     if (this.env.address.indent === 0) {
       return Status.Terminated
     }
@@ -129,6 +132,6 @@ export class Runtime {
   }
 
   get currentLine(): Statement {
-    return this.env.code[this.env.address.line]
+    return this.env.code[this.env.address.module][this.env.address.line]
   }
 }

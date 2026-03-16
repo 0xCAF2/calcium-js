@@ -13,10 +13,10 @@ import type { RuntimeOptions } from "./runtime"
 export type OutputFunction = (desc: string) => void
 
 export class Environment {
-  address = new Address(1, 0)
+  address = new Address(1, 0, "main")
   blocks: Block[] = []
   calls: CallingCmd[] = []
-  code: Statement[]
+  code: { [module: string]: Statement[] } = {}
   context: Namespace
 
   /**
@@ -29,11 +29,11 @@ export class Environment {
   thisObj: AnyType
 
   constructor(
-    code: Statement[],
     parser: StatementParser,
-    options: RuntimeOptions
+    options: RuntimeOptions,
+    code: Statement[] = [],
   ) {
-    this.code = code
+    this.code["main"] = code
     // initialize the global context with options
     this.context = new Namespace(undefined, options)
     this.parser = parser
@@ -60,7 +60,7 @@ export class Environment {
     outer: while (true) {
       nextIndex = this.address.line + 1
       inner: while (true) {
-        const nextStmt = this.code[nextIndex]
+        const nextStmt = this.code[this.address.module][nextIndex]
         const nextIndent = nextStmt[Idx.Statement.Indent]
         const delta = this.address.indent - nextIndent
         if (delta > 0) {
@@ -83,5 +83,9 @@ export class Environment {
       }
     }
     this.address.line = nextIndex
+  }
+
+  get currentModule(): Statement[] {
+    return this.code[this.address.module]
   }
 }

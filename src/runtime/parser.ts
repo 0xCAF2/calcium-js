@@ -41,7 +41,7 @@ export class ExpressionParser {
 
   readBinOp(
     operator: string,
-    expr: [Elem.BinaryOperator, Elem.Any, Elem.Any]
+    expr: [Elem.BinaryOperator, Elem.Any, Elem.Any],
   ): Expr.BinaryOperator {
     const left = this.readExpr(expr[Idx.BinaryOperator.Left])
     const right = this.readExpr(expr[Idx.BinaryOperator.Right])
@@ -62,6 +62,15 @@ export class ExpressionParser {
       const cleaned = value.replace(/_/g, "")
       if (cleaned.includes(".") || /[eE]/.test(cleaned)) {
         return parseFloat(cleaned)
+      }
+      if (/^0b/.test(cleaned)) {
+        return parseInt(cleaned.slice(2), 2)
+      }
+      if (/^0o/.test(cleaned)) {
+        return parseInt(cleaned.slice(2), 8)
+      }
+      if (/^0x/.test(cleaned)) {
+        return parseInt(cleaned.slice(2), 16)
       }
       return parseInt(cleaned, 10)
     } else if (kw === Kw.Expression.ArrayLiteral) {
@@ -91,7 +100,7 @@ export class ExpressionParser {
     } else if (Object.values<string>(Kw.BinaryOperator).includes(kw)) {
       return this.readBinOp(
         kw,
-        elem as [Elem.BinaryOperator, Elem.Any, Elem.Any]
+        elem as [Elem.BinaryOperator, Elem.Any, Elem.Any],
       )
     } else if (Object.values<string>(Kw.UnaryOperator).includes(kw)) {
       return this.readUnOp(kw, elem as [Elem.UnaryOperator, Elem.Any])
@@ -104,12 +113,12 @@ export class ExpressionParser {
     if (kw === Kw.Reference.Variable) {
       return new Expr.Variable(elem[Idx.Variable.Name] as string)
     } else if (kw === Kw.Reference.Property) {
-      const ref = this.readRef(elem[Idx.Property.ReferredObj])
+      const ref = this.readRef(elem[Idx.Property.ReferredObj] as Elem.Reference)
       const propertyName = elem[Idx.Property.PropertyName]
       return new Expr.Property(ref, propertyName)
     } else if (kw === Kw.Reference.Subscript) {
       const referredObj = this.readRef(
-        elem[Idx.Subscript.ReferredObj] as Elem.Reference
+        elem[Idx.Subscript.ReferredObj] as Elem.Reference,
       )
       const index = this.readExpr(elem[Idx.Subscript.IndexExpr] as Elem.Any)
       return new Expr.Subscript(referredObj, index)
@@ -120,11 +129,11 @@ export class ExpressionParser {
 
   readUnOp(
     operator: string,
-    elem: [Elem.UnaryOperator, Elem.Any]
+    elem: [Elem.UnaryOperator, Elem.Any],
   ): Expr.UnaryOperator {
     return new Expr.UnaryOperator(
       operator,
-      this.readExpr(elem[Idx.UnaryOperator.Operand])
+      this.readExpr(elem[Idx.UnaryOperator.Operand]),
     )
   }
 }
