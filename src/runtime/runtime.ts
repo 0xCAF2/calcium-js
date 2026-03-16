@@ -66,10 +66,10 @@ export class Runtime {
     } else {
       codeObj = code
     }
-    this.env.code[moduleName] = codeObj
+    this.env.code.set(moduleName, codeObj)
 
     // create a new context for the module
-    const moduleContext = new Namespace(undefined, this.env.context.options)
+    const moduleContext = new Namespace()
     const previousContext = this.env.context
     this.env.context = moduleContext
 
@@ -121,7 +121,7 @@ export class Runtime {
   }
 
   step(): Status {
-    const lastIndex = this.env.code[this.env.address.module].length - 1
+    const lastIndex = this.env.code.get(this.env.address.module)!.length - 1
     if (this.env.address.indent === 0) {
       return Status.Terminated
     }
@@ -170,6 +170,6 @@ export class Runtime {
   }
 
   get currentLine(): Statement {
-    return this.env.code[this.env.address.module][this.env.address.line]
+    return this.env.code.get(this.env.address.module)![this.env.address.line]
   }
 }

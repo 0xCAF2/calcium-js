@@ -16,7 +16,7 @@ export class Environment {
   address = new Address(1, 0, "main")
   blocks: Block[] = []
   calls: CallingCmd[] = []
-  code: { [module: string]: Statement[] } = {}
+  code = new Map<string, Statement[]>()
   context: Namespace
 
   /**
@@ -33,7 +33,7 @@ export class Environment {
     options: RuntimeOptions,
     code: Statement[] = [],
   ) {
-    this.code["main"] = code
+    this.code.set("main", code)
     // initialize the global context with options
     this.context = new Namespace(undefined, options)
     this.parser = parser
@@ -60,7 +60,7 @@ export class Environment {
     outer: while (true) {
       nextIndex = this.address.line + 1
       inner: while (true) {
-        const nextStmt = this.code[this.address.module][nextIndex]
+        const nextStmt = this.code.get(this.address.module)![nextIndex]
         const nextIndent = nextStmt[Idx.Statement.Indent]
         const delta = this.address.indent - nextIndent
         if (delta > 0) {
@@ -86,6 +86,6 @@ export class Environment {
   }
 
   get currentModule(): Statement[] {
-    return this.code[this.address.module]
+    return this.code.get(this.address.module)!
   }
 }

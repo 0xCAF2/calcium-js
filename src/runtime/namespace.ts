@@ -27,7 +27,7 @@ export class Namespace {
    * creates a module object from this namespace. A module object is a plain object that has the same key-value pairs as this namespace.
    */
   createModule(): AnyType {
-    const moduleObj: { [key: string]: AnyType } = {}
+    const moduleObj = Object.create(null) as { [key: string]: AnyType }
     for (const [key, value] of this.dict.entries()) {
       moduleObj[key] = value
     }
