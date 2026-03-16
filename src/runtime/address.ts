@@ -6,19 +6,21 @@ export class Address {
    *
    * @param indent corresponds to the indent of a block
    * @param line line number (index in the code array)
+   * @param module the name of the module
    * @param calls the counter of function calls
    */
   constructor(
     public indent: number,
     public line: number,
-    public calls: number = 0
+    public module: string,
+    public calls: number = 0,
   ) {}
 
   /**
    * Make a copy
    */
   clone() {
-    return new Address(this.indent, this.line, this.calls)
+    return new Address(this.indent, this.line, this.module, this.calls)
   }
 
   /**
@@ -30,6 +32,7 @@ export class Address {
     return (
       this.indent === address.indent &&
       this.line === address.line &&
+      this.module === address.module &&
       this.calls === address.calls
     )
   }
@@ -41,6 +44,7 @@ export class Address {
   jump(to: Address) {
     this.indent = to.indent
     this.line = to.line
+    this.module = to.module
   }
 
   /**

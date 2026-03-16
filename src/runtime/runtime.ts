@@ -9,6 +9,7 @@ import type { Statement } from "./statement"
 import { Status } from "./status"
 import { commandTable } from "../core/table"
 import { ExpressionParser } from "./parser"
+import { Namespace } from "./namespace"
 
 export type RuntimeOptions = {
   /**
@@ -36,6 +37,9 @@ export class Runtime {
   /**
    *
    * @param code a JSON string or an array
+   * @param options options for this runtime
+   * @param parser a statement parser for this runtime. You can provide a custom parser if you want to extend the language.
+   * If not provided, the default parser with the default command table will be used.
    */
   constructor(
     code: string | Statement[],
@@ -48,7 +52,44 @@ export class Runtime {
     } else {
       codeObj = code
     }
-    this.env = new Environment(codeObj, parser, options)
+    this.env = new Environment(parser, options, codeObj)
+  }
+
+  /**
+   * loads a module into this runtime.
+   */
+  loadModule(moduleName: string, code: string | Statement[]) {
+    // parse the code and save it in the environment
+    let codeObj: Statement[]
+    if (typeof code === "string") {
+      codeObj = JSON.parse(code)
+    } else {
+      codeObj = code
+    }
+    this.env.code.set(moduleName, codeObj)
+
+    // create a new context for the module
+    const moduleContext = new Namespace()
+    const previousContext = this.env.context
+    this.env.context = moduleContext
+
+    // store the current address to restore later
+    const previousAddress = this.env.address.clone()
+
+    // change the address to the module's entry point
+    this.env.address.module = moduleName
+    this.env.address.line = 0
+    this.env.address.indent = 1
+
+    // execute the module's code and load to the context
+    this.run()
+
+    // restore the previous context
+    this.env.context = previousContext
+    this.env.address = previousAddress
+
+    // register the module in the global context
+    this.env.context.register(moduleName, moduleContext.createModule())
   }
 
   /**
@@ -80,7 +121,7 @@ export class Runtime {
   }
 
   step(): Status {
-    const lastIndex = this.env.code.length - 1
+    const lastIndex = this.env.code.get(this.env.address.module)!.length - 1
     if (this.env.address.indent === 0) {
       return Status.Terminated
     }
@@ -129,6 +170,6 @@ export class Runtime {
   }
 
   get currentLine(): Statement {
-    return this.env.code[this.env.address.line]
+    return this.env.code.get(this.env.address.module)![this.env.address.line]
   }
 }
