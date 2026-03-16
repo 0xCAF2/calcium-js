@@ -63,13 +63,13 @@ export class ExpressionParser {
       if (cleaned.includes(".") || /[eE]/.test(cleaned)) {
         return parseFloat(cleaned)
       }
-      if (/^0b/.test(cleaned)) {
+      if (/^0[bB]/.test(cleaned)) {
         return parseInt(cleaned.slice(2), 2)
       }
-      if (/^0o/.test(cleaned)) {
+      if (/^0[oO]/.test(cleaned)) {
         return parseInt(cleaned.slice(2), 8)
       }
-      if (/^0x/.test(cleaned)) {
+      if (/^0[xX]/.test(cleaned)) {
         return parseInt(cleaned.slice(2), 16)
       }
       return parseInt(cleaned, 10)
