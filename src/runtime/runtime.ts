@@ -9,6 +9,7 @@ import type { Statement } from "./statement"
 import { Status } from "./status"
 import { commandTable } from "../core/table"
 import { ExpressionParser } from "./parser"
+import { Namespace } from "./namespace"
 
 export type RuntimeOptions = {
   /**
@@ -52,6 +53,43 @@ export class Runtime {
       codeObj = code
     }
     this.env = new Environment(parser, options, codeObj)
+  }
+
+  /**
+   * loads a module into this runtime.
+   */
+  loadModule(moduleName: string, code: string | Statement[]) {
+    // parse the code and save it in the environment
+    let codeObj: Statement[]
+    if (typeof code === "string") {
+      codeObj = JSON.parse(code)
+    } else {
+      codeObj = code
+    }
+    this.env.code[moduleName] = codeObj
+
+    // create a new context for the module
+    const moduleContext = new Namespace(undefined, this.env.context.options)
+    const previousContext = this.env.context
+    this.env.context = moduleContext
+
+    // store the current address to restore later
+    const previousAddress = this.env.address.clone()
+
+    // change the address to the module's entry point
+    this.env.address.module = moduleName
+    this.env.address.line = 0
+    this.env.address.indent = 1
+
+    // execute the module's code and load to the context
+    this.run()
+
+    // restore the previous context
+    this.env.context = previousContext
+    this.env.address = previousAddress
+
+    // register the module in the global context
+    this.env.context.register(moduleName, moduleContext.createModule())
   }
 
   /**

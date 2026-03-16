@@ -20,8 +20,19 @@ export class Namespace {
     public readonly options: RuntimeOptions = {
       canAccessWindow: false,
       enableGlobal: false,
-    }
+    },
   ) {}
+
+  /**
+   * creates a module object from this namespace. A module object is a plain object that has the same key-value pairs as this namespace.
+   */
+  createModule(): AnyType {
+    const moduleObj: { [key: string]: AnyType } = {}
+    for (const [key, value] of this.dict.entries()) {
+      moduleObj[key] = value
+    }
+    return moduleObj
+  }
 
   /**
    * searches an attribute in a class scope
