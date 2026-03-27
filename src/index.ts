@@ -6,3 +6,5 @@ export type { Statement } from "./runtime/statement"
 export * as Index from "./core/indexes"
 export * as Keyword from "./core/keywords"
 export * as Element from "./runtime/element"
+
+export { convert } from "./converter"
