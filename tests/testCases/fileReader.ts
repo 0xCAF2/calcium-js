@@ -1,7 +1,7 @@
 import { readFileSync } from "fs"
 import { fileURLToPath } from "url"
 import { dirname, join } from "path"
-import { convert } from "../../src/converter"
+import { convert } from "../../src/tool"
 
 export function openJsFile(filename: string): string {
   const __dirname = dirname(fileURLToPath(import.meta.url))
