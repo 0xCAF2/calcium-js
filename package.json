@@ -11,8 +11,19 @@
   },
   "author": "Roki Turner <roki@0xcaf2.dev>",
   "files": [
-    "dist"
+    "dist",
+    "dist/tool"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tool": {
+      "import": "./dist/tool/index.js",
+      "types": "./dist/tool/index.d.ts"
+    }
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

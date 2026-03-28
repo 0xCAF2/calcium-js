@@ -1,12 +1,15 @@
-import { defineConfig } from 'tsdown'
+import { defineConfig } from "tsdown"
 
 export default defineConfig([
   {
-    entry: ['./src/index.ts'],
-    platform: 'neutral',
+    entry: ["./src/index.ts"],
+    platform: "neutral",
     dts: true,
-    outputOptions: {
-      name: 'Calcium',
-    }
+  },
+  {
+    entry: ["./src/tool/index.ts"],
+    platform: "neutral",
+    dts: true,
+    outDir: "./dist/tool",
   },
 ])
