@@ -1,6 +1,6 @@
 {
   "name": "calcium-js",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A Calcium language interpreter on JavaScript.",
   "type": "module",
   "license": "Apache-2.0",
