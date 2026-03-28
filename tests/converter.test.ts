@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 import { Runtime, Status } from "../src"
-import { convert } from "../tool/converter"
+import { convert } from "../src/tool"
 import { openJsFile } from "./testCases/fileReader"
 
 test("Convert JavaScript to Calcium", () => {
