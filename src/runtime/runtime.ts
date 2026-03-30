@@ -51,6 +51,14 @@ export class Runtime {
   }
 
   /**
+   * defines and imports an external function that can be called from the code
+   * running in this runtime.
+   */
+  defineExternalFunction(name: string, func: Function) {
+    this.env.context.register(name, func)
+  }
+
+  /**
    * loads a module into this runtime.
    */
   loadModule(moduleName: string, code: string | Statement[]) {
