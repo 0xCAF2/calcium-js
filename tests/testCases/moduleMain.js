@@ -4,7 +4,7 @@ export const code = [
     [],
     "=",
     ["var", "a"],
-    ["call", ["prop", ["var", "module-a"], "add"], [["num", "8"]]],
+    ["call", ["prop", ["var", "moduleA"], "add"], [["num", "8"]]],
   ],
   [
     1,
@@ -17,7 +17,7 @@ export const code = [
     [],
     "=",
     ["var", "b"],
-    ["call", ["prop", ["var", "module-b"], "add"], [["num", "10"]]],
+    ["call", ["prop", ["var", "moduleB"], "add"], [["num", "10"]]],
   ],
   [
     1,

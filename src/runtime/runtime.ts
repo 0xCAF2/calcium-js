@@ -30,11 +30,6 @@ export class Runtime {
   env: Environment
 
   /**
-   * a flag for a Worker.
-   */
-  isPaused = false
-
-  /**
    *
    * @param code a JSON string or an array
    * @param options options for this runtime
@@ -53,6 +48,14 @@ export class Runtime {
       codeObj = code
     }
     this.env = new Environment(parser, options, codeObj)
+  }
+
+  /**
+   * defines and imports an external function that can be called from the code
+   * running in this runtime.
+   */
+  defineExternalFunction(name: string, func: Function) {
+    this.env.context.register(name, func)
   }
 
   /**
@@ -90,20 +93,6 @@ export class Runtime {
 
     // register the module in the global context
     this.env.context.register(moduleName, moduleContext.createModule())
-  }
-
-  /**
-   * pauses this runtime.
-   */
-  pause() {
-    this.isPaused = true
-  }
-
-  /**
-   * resumes this runtime.
-   */
-  resume() {
-    this.isPaused = false
   }
 
   /**
