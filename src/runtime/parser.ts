@@ -51,7 +51,9 @@ export class ExpressionParser {
   readExpr(elem: Elem.Any): Expr.Expression {
     if (
       typeof elem === "string" ||
+      elem instanceof String ||
       typeof elem === "boolean" ||
+      elem instanceof Boolean ||
       elem === null
     ) {
       return elem
