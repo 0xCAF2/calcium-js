@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": [
-      "es2023"
+      "ESNext"
     ],
     "moduleDetection": "force",
     "module": "preserve",
@@ -18,10 +18,13 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "skipLibCheck": true
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "allowJs": true
   },
   "include": [
     "src",
-    "src/tool/index.ts"
+    "src/tool/index.ts",
+    "src/web/index.ts"
   ]
 }

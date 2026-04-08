@@ -12,7 +12,8 @@
   "author": "Roki Turner <roki@0xcaf2.dev>",
   "files": [
     "dist",
-    "dist/tool"
+    "dist/tool",
+    "dist/web"
   ],
   "exports": {
     ".": {
@@ -22,6 +23,10 @@
     "./tool": {
       "import": "./dist/tool/index.js",
       "types": "./dist/tool/index.d.ts"
+    },
+    "./web": {
+      "import": "./dist/web/index.js",
+      "types": "./dist/web/index.d.ts"
     }
   },
   "main": "./dist/index.js",
@@ -46,9 +51,11 @@
     "@types/node": "^25.0.0",
     "bumpp": "^11.0.0",
     "tsdown": "^0.21.0",
+    "vite": "^8.0.7",
     "vitest": "^4.0.6"
   },
   "peerDependencies": {
+    "preact": "^10.29.1",
     "typescript": "^5"
   }
 }

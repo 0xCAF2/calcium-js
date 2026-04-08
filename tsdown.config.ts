@@ -12,4 +12,10 @@ export default defineConfig([
     dts: true,
     outDir: "./dist/tool",
   },
+  {
+    entry: ["./src/web/index.ts"],
+    platform: "neutral",
+    dts: true,
+    outDir: "./dist/web",
+  },
 ])
