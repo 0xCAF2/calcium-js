@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { Kind, Result } from "../../runtime/block"
+import { Result } from "../../runtime/block"
 import type { Environment } from "../../runtime/environment"
 import { ElementBlock } from "./elementBlock"
 
