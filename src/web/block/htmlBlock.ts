@@ -10,7 +10,14 @@ export class HtmlBlock extends ElementBlock {
       "div",
       () => true,
       (env) => {
-        env.context.register("html", h("div", null, ...this.children))
+        env.context.register(
+          "html",
+          h(
+            "div",
+            { style: Object.fromEntries(this.styles) },
+            ...this.children,
+          ),
+        )
         env.address.shift(-1)
         return Result.Shifted
       },

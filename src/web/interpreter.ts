@@ -9,7 +9,7 @@ export class Interpreter {
   public readonly runtime: Runtime
   constructor(public readonly code: Code) {
     this.runtime = new Runtime(code, {
-      canAccessWindow: true,
+      canAccessWindow: false,
       enableGlobal: false,
     })
   }

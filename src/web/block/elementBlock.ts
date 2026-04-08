@@ -1,9 +1,11 @@
 import { h, type ComponentChildren } from "preact"
 import { Block, Kind, Result } from "../../runtime/block"
 import type { Environment } from "../../runtime/environment"
+import { findElementBlock } from "./findElementBlock"
 
 export class ElementBlock extends Block {
   public readonly children: ComponentChildren[] = []
+  public readonly styles: Map<string, string> = new Map()
 
   constructor(
     env: Environment,
@@ -17,15 +19,14 @@ export class ElementBlock extends Block {
       enter ?? (() => true),
       exit ??
         ((env) => {
-          let parent: ElementBlock | undefined
-          for (let i = env.blocks.length - 1; i >= 0; --i) {
-            const block = env.blocks[i]
-            if (block instanceof ElementBlock) {
-              parent = block
-              break
-            }
-          }
-          parent?.children.push(h(this.tagName, null, ...this.children))
+          const parent = findElementBlock(env)
+          parent?.children.push(
+            h(
+              this.tagName,
+              { style: Object.fromEntries(this.styles) },
+              ...this.children,
+            ),
+          )
           env.address.shift(-1)
           return Result.Shifted
         }),

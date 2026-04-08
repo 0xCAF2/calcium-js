@@ -9,11 +9,21 @@ render(
       [
         2,
         [],
-        "expr",
-        ["call", ["prop", ["var", "console"], "log"], ["Hello, World."]],
+        "for of",
+        "num",
+        [
+          "array",
+          [
+            ["num", "1"],
+            ["num", "2"],
+            ["num", "3"],
+          ],
+        ],
       ],
-      [2, [], "for of", "num", ["array", ["1", "2", "3"]]],
       [3, [], "p"],
+      [4, [], "ifs"],
+      [5, [], "if", ["===", ["%", ["var", "num"], ["num", "2"]], ["num", "1"]]],
+      [6, [], "css", "color", "dodgerblue"],
       [4, [], "text", ["+", "This is a paragraph ", ["var", "num"]]],
       [1, [], "end"],
     ]}
