@@ -6,6 +6,7 @@ export enum Statement {
   Indent = 0,
   Options = 1,
   Keyword = 2,
+  FirstArg = 3,
 }
 
 // commands
