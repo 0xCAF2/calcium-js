@@ -1,6 +1,6 @@
 import { Interpreter, type Code } from "./interpreter"
 
-interface CalciumInterpreterProps {
+export interface CalciumInterpreterProps {
   code: Code
 }
 
