@@ -4,7 +4,7 @@ import { ElementBlock } from "../block/elementBlock"
 import { commandTable } from "../../core/table"
 import { Index } from "../.."
 import type { Expression } from "../../expression"
-import { findElementBlock } from "../block/findElementBlock"
+import { findElementBlock } from "../block/utils"
 
 export class Text implements Command {
   constructor(public readonly text: Expression) {}

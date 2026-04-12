@@ -3,6 +3,8 @@ import { Result } from "../../runtime/block"
 import type { Environment } from "../../runtime/environment"
 import { ElementBlock } from "./elementBlock"
 
+export let rootNode: any = null
+
 export class HtmlBlock extends ElementBlock {
   constructor(env: Environment) {
     super(
@@ -10,13 +12,10 @@ export class HtmlBlock extends ElementBlock {
       "div",
       () => true,
       (env) => {
-        env.context.register(
-          "html",
-          h(
-            "div",
-            { style: Object.fromEntries(this.styles) },
-            ...this.children,
-          ),
+        rootNode = h(
+          "div",
+          this.style ? { style: Object.fromEntries(this.style.value) } : null,
+          ...this.children,
         )
         env.address.shift(-1)
         return Result.Shifted

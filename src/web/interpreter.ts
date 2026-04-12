@@ -1,7 +1,7 @@
-import { h } from "preact"
 import type { Statement } from "../runtime/statement"
 import { Runtime } from "../runtime/runtime"
 import "./command"
+import { rootNode } from "./block/htmlBlock"
 
 export type Code = string | Statement[]
 
@@ -16,6 +16,6 @@ export class Interpreter {
 
   show() {
     this.runtime.run()
-    return h("div", null, this.runtime.env.context.get("html")!)
+    return rootNode
   }
 }

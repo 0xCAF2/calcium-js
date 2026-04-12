@@ -13,6 +13,7 @@ const workspace = Blockly.inject("blockly-div", {
       <block type="p"></block>
       <block type="txt"></block>
       <block type="css"></block>
+      <block type="on"></block>
       <block type="for_of"></block>
       <block type="if"></block>
       <block type="assign"></block>
@@ -184,11 +185,22 @@ Blockly.serialization.workspaces.load(
                         },
                         STMTS: {
                           block: {
-                            type: "css",
-                            id: "X.PYe)yn=oT[!TsKvB0G",
+                            type: "on",
+                            id: "I5w;$NsJMwy,3nbz4wzN",
                             fields: {
-                              PROPERTY: "color",
-                              VALUE: "blue",
+                              EVENT: "click",
+                            },
+                            inputs: {
+                              HANDLER: {
+                                block: {
+                                  type: "css",
+                                  id: "qzEAWC+Gl/=Xb2tsIEG$",
+                                  fields: {
+                                    PROPERTY: "color",
+                                    VALUE: "red",
+                                  },
+                                },
+                              },
                             },
                           },
                         },

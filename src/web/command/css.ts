@@ -3,7 +3,7 @@ import type { Command } from "../../command"
 import { commandTable } from "../../core/table"
 import type { Expression } from "../../expression"
 import type { Environment } from "../../runtime/environment"
-import { findElementBlock } from "../block/findElementBlock"
+import { findElementBlock } from "../block/utils"
 
 export class Css implements Command {
   constructor(
@@ -16,7 +16,10 @@ export class Css implements Command {
     if (element) {
       const propertyName = env.evaluate(this.property) as string
       const propertyValue = env.evaluate(this.value) as string
-      element.styles.set(propertyName, propertyValue)
+      element.style.value = new Map(element.style.value).set(
+        propertyName,
+        propertyValue,
+      )
     } else {
       throw new Error("CSS command must be inside an element block")
     }

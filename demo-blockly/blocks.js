@@ -48,6 +48,28 @@ const definitions = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 120,
   },
   {
+    type: "on",
+    message0: "on %1 (event): %2 %3",
+    args0: [
+      {
+        type: "field_input",
+        name: "EVENT",
+        text: "click",
+      },
+      {
+        type: "input_dummy",
+      },
+      {
+        type: "input_statement",
+        name: "HANDLER",
+      },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+  },
+  {
     type: "for_of",
     message0: "for %1 of %2 : %3 %4",
     args0: [
