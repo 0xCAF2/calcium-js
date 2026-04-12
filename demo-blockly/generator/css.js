@@ -2,6 +2,6 @@ import { calciumGenerator } from "."
 
 calciumGenerator.forBlock["css"] = (block, generator) => {
   const property = block.getFieldValue("PROPERTY")
-  const value = block.getFieldValue("VALUE")
-  return `[${generator.indent}, [], "css", ${JSON.stringify(property)}, ${JSON.stringify(value)}],`
+  const value = generator.valueToCode(block, "VALUE", 0) || '"red"'
+  return `[${generator.indent}, [], "css", ${JSON.stringify(property)}, ${value}],`
 }

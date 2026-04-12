@@ -7,17 +7,16 @@ import { findElementBlock } from "../block/utils"
 
 export class Css implements Command {
   constructor(
-    private readonly property: Expression,
+    private readonly property: string,
     private readonly value: Expression,
   ) {}
 
   execute(env: Environment): void {
     const element = findElementBlock(env)
     if (element) {
-      const propertyName = env.evaluate(this.property) as string
       const propertyValue = env.evaluate(this.value) as string
       element.style.value = new Map(element.style.value).set(
-        propertyName,
+        this.property,
         propertyValue,
       )
     } else {
@@ -29,5 +28,5 @@ export class Css implements Command {
 commandTable.set("css", (stmt, exprParser) => {
   const property = stmt.at(Index.Statement.FirstArg)
   const value = stmt.at(Index.Statement.FirstArg + 1)
-  return new Css(exprParser.readExpr(property), exprParser.readExpr(value))
+  return new Css(property, exprParser.readExpr(value))
 })

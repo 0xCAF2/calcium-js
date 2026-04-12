@@ -38,9 +38,8 @@ const definitions = Blockly.common.createBlockDefinitionsFromJsonArray([
         text: "color",
       },
       {
-        type: "field_input",
+        type: "input_value",
         name: "VALUE",
-        text: "blue",
       },
     ],
     previousStatement: null,

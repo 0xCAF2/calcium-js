@@ -8,13 +8,28 @@ import { findElementBlock } from "../block/utils"
 
 class EventHandlerEnded extends Error {}
 
+class CalciumEvent {
+  constructor(private readonly event: Event) {}
+
+  get type() {
+    return this.event.type
+  }
+
+  preventDefault() {
+    this.event.preventDefault()
+  }
+
+  stopPropagation() {
+    this.event.stopPropagation()
+  }
+}
+
 export class On implements Command {
   constructor(public readonly eventName: string) {}
 
   execute(env: Environment): void {
-    console.log(this.eventName)
     const handlerAddress = env.address.clone()
-    const local = new Namespace(env.context)
+    const parentContext = env.context
 
     const element = findElementBlock(env)
     if (element) {
@@ -24,8 +39,9 @@ export class On implements Command {
     }
 
     function handler(event: Event) {
-      console.log(event)
       const callerAddress = env.address.clone() // equals to end command's address
+      const caev = new CalciumEvent(event)
+      const local = new Namespace(parentContext)
 
       const block = new Block(
         Kind.Call,
@@ -33,7 +49,7 @@ export class On implements Command {
         (env) => {
           env.stack.push(env.context)
           env.context = local
-          env.context.register("event", event)
+          local.register("event", caev)
           env.blocks.push(element!)
           return true
         },
@@ -53,15 +69,13 @@ export class On implements Command {
           env.address.jump(callerAddress)
           return
         }
-        if (env.address.indent === 0) {
-          env.address.jump(callerAddress)
-          return
-        }
+
         const lastIndex = env.currentModule.length - 1
-        if (env.address.line > lastIndex) {
+        if (env.address.line > lastIndex || env.address.indent === 0) {
           env.address.jump(callerAddress)
           return
         }
+
         const line = env.currentModule[env.address.line]
         const cmd = env.parser.readStmt(line)
         cmd.execute(env)
