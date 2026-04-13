@@ -1,6 +1,6 @@
 # calcium-js
 
-[Calcium is a programming language](https://0xcaf2.dev/docs/calcium) designed
+[Calcium is a programming language](https://calcium.0xcaf2.dev/) designed
 to easily generate its code programmatically.
 This repository is a JavaScript implementation of the Calcium interpreter.
 
