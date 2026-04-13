@@ -1,5 +1,9 @@
 # calcium-js
 
+**Deprecated**: This project is no longer maintained.
+
+---
+
 [Calcium is a programming language](https://calcium.0xcaf2.dev/) designed
 to easily generate its code programmatically.
 This repository is a JavaScript implementation of the Calcium interpreter.
